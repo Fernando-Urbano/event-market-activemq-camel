@@ -1,4 +1,4 @@
-# Event Market - Final Project
+# Event Market
 **Fernando Urbano Final Project**
 
 # Video Explanation
@@ -145,6 +145,9 @@ mvn exec:java -Dexec.mainClass="eventmarket.main.DatabaseInitializer"
 ```
 
 If you cannot run the `DatabaseInitializer`, it means there are relationship between classes that are not working well and should be changed. You can see the errors in the terminal.
+
+# Java Version
+For this project, we use Java 21.0.2 and ActiveMQ 6.1.2.
 
 # Run Camel File
 In a general way, running camel file can be achieved by the following command when inside a maven project that contains a pom referencing it:
