@@ -1,0 +1,263 @@
+General Topic
+
+We aim to build an Event Ticket Purchase Platform, including event creation, purchase app, notification system, payment validation, event recommender engine, and analytics.
+
+In order to facilitate the understanding we highlight the following with specific formatting:
+
+-   Application Names
+
+-   Design Patterns
+
+-   Classes
+
+Description of the Problem to be Solved
+
+Dealing with this system requires us to:
+
+-   Build applications that can be handled in parallel with multiple asynchronous deliveries:
+
+    -   Users must be able to access the resources of the event market while:
+
+        -   recommendation models run to generate new event recommendations.
+
+        -   the financial validation of their payment methods is happening.
+
+        -   new notifications are delivered by departments of the event market system (marketing, accounting, event creators).
+
+    -   Event Creators must be able to access the analytics of their events while:
+
+        -   new users purchase the event tickets.
+
+        -   event statistics changes.
+
+        -   users check-in to the events.
+
+-   Handle exceptions, some of which are exceptionally probable in distributed systems:
+
+    -   Users buying tickets that are almost sold out at the same time.
+
+    -   Notifications that are never read by the user.
+
+    -   Not approved payment methods.
+
+    -   Underage users trying to buy tickets for 18+ years old events.
+
+Summary of Anticipated Deliveries
+
+-   30-35 classes
+
+-   9-11 distributed applications:
+
+    -   Event Creation
+
+    -   Ticket Purchase
+
+    -   Financial Validation
+
+    -   Financial Validation Listener
+
+    -   Ticket Validation
+
+    -   Event Recommender Engine
+
+    -   Event Analytics Platform
+
+    -   Notification Engine
+
+    -   Event Check-In
+
+Design Patterns
+
+Iterator
+
+-   Inside the Ticket Purchase app.
+
+-   Iterator pattern is used inside the TicketTypeIterator class to iterate over the ticket types of an Event.
+
+-   Provides a convenient way for users to browse through various ticket options, helping them understand the minimum age, prices, and types of tickets available for an event.
+
+Singleton
+
+-   Inside the Financial Validation app.
+
+-   The FinancialValidator class is a Singleton, ensuring that a single instance validates ticket requests and manages their statuses.
+
+-   The Singleton pattern allows the FinancialValidator to track which requests it has validated recently, avoiding redundant checks and improving efficiency.
+
+Strategy
+
+-   Inside the Financial Validation app.
+
+-   The PaymentMethod class acts as a Strategy pattern, providing an interface implemented by different payment classes such as CheckingsAccountPayment and CardPayment.
+
+-   This pattern enables the Financial Validation app to support various payment methods flexibly, facilitating future additions or modifications by simply extending the interface.
+
+Facade
+
+-   Inside the Event Recommender Engine.
+
+-   The EventRecommender class acts as a Facade, simplifying the complexity of underlying classes derived from the AbstractRecommenderModel.
+
+-   This pattern allows for interactions with different recommendation models, making it easier to generate recommendations for users based on recent ticket requests.
+
+Template Method
+
+-   Inside the Event Recommender Engine.
+
+-   The Template Method pattern is used by AbstractRecommenderModel and its derived classes, implementing some functionalities while leaving the heavy lifting to derived classes.
+
+-   This pattern provides a clear structure for creating different recommendation models, allowing derived classes to implement the specific logic needed to generate suggestions for users.
+
+EIP Patterns
+
+Content-Based Router
+
+From Ticket Purchase to Financial Validation or Ticket Validation.
+
+If the ticket requires payment, it is sent to the Financial Validation, otherwise, it is sent to the Ticket Validation.
+
+Translator
+
+From external banking system to Financial Validation Listener. The Translator intercepts messages from the external banking system and converts them into a format that the Financial Validation Listener can process.
+
+Message Filter
+
+From Notification System to User Interface in Ticket Purchase to filter unwanted messages based on User preferences.
+
+Dead Letter Queue
+
+From Notification System to User Interface in Ticket Purchase. Once the Message Filter filters the desired messages, the dead letter keeps the undesired ones.
+
+Publish-Subscribe Channel
+
+From Event Check-In to Event Analytics Platform and Notification System. The Publish-Subscribe Channel allows the Event Check-In app to publish a single message to multiple subscribers (in this case, Event Analytics Platform and Notification Engine). Both systems subscribe to the same channel, receiving the check-in message simultaneously.
+
+Aggregator
+
+From the Event Check-In to the Event Analytics Platform. The Aggregator collects check-in messages over a period of time and combines them into a single message before sending it to the Event Analytics Platform. It summarizes the check-in data, reducing the number of messages sent and providing a more comprehensive overview of event analytics at regular intervals.
+
+Splitter
+
+From Event Recommendation Engine to Notification Engine. Divides a message with multiple event recommendations into multiple messages with a single event recommendation. As a consequence, the Notification Engine can easily send one recommendation at a time to the user or join the recommendation in different ways.
+
+Applications and UML Drawings
+
+Event Creation
+
+App creates a new instances of Event.
+
+The Event class has:
+
+-   at least one TicketType instance: for instance, premium, normal, free, etc... which specifies the price, minimum age, total tickets for the type.
+
+-   one Location instance.
+
+-   one Creator (each Creator can have multiple events).
+
+[]
+
+Ticket Purchase
+
+App allows purchase of tickets from User.
+
+The TicketRequest is the main class in this process.
+
+Every TicketRequest instance has an instance of:
+
+-   TicketType: the type of ticket the user is buying. A single event allows for multiple TicketType’s with different prices, descriptions, etc. A TicketRequest instance only has one TicketType instance among the ones available for the event.
+
+-   Financial Information: the information regarding the payment of the ticket. Each instance of it has one instance of a class derived from PaymentMethod, which can be CheckingsAccountPayment or CardPayment. In case the ticket price is 0, the FinancialInformation is not necessary.
+
+-   User: the person purchasing the ticket.
+
+-   Recipient: the person who will enter the event. An instance of class User can be transformed into an instance of the class Recipient in case the user is trying to buy a ticket for himself/herself.
+
+Once the TicketRequest is completed, it is sent to:
+
+-   the Financial Validation in case a payment is necessary.
+
+-   the Ticket Validation in case no payment is necessary.
+
+-   the Event Recommender Engine regardless of payment options.
+
+Inside the Ticket Purchase we use the Iterator pattern with TicketTypeIterator, which receives an Event and iterates over the ticket types. The iterator is considerably useful for the User to understand the minimum age among all the ticket types, the minimum and maximum price of the event, etc...
+
+[]
+
+Financial Validation
+
+App gets messages from the distributed message queue saying that a TicketRequest needs payment validation.
+
+Inside the app, The TicketRequest is sent to the FinancialValidator which ask for a payment process.
+
+The FinancialValidator is a Singleton because it aims to track which instances of TicketRequest it has checked recently: this allows the FinancialValidator to avoid wasting time checking twice the same TicketRequest.
+
+The TicketRequest instance has an instance of FinancialInformation, which has one instance of a class derived from PaymentMethod.
+
+The available classes are:
+
+-   CardPayment
+
+-   CheckingsAccountPayment
+
+PaymentMethod is a Strategy pattern.
+
+The FinancialValidator must be able to handle both classes.
+
+Therefore, if there is an addition/change in those classes, the FinancialValidator must be changed/incremented as well.
+
+Finally, the FinancialValidator sends a request to the desired bank to approve the payment.
+
+[]
+
+Financial Validation Listener
+
+App waits for the confirmation from external banking systems to validate the purchase of the User. It sends messages to Ticket Validation if the purchase was approved or to Notification Engine if the purchase was not approved.
+
+Ticket Validation
+
+App gets messages from the distributed message queue saying that the ticket for that User has been approved.
+
+The Ticket instance is created with a TicketRequest instance inside. The TicketRequest contains all the information about the Event inside it.
+
+The Ticket instance is added to the User. More specifically, the Ticket instance is added to a list of owned tickets and remove the instance of TicketRequest from the list of requested tickets.
+
+Finally, a message is sent to the Notification Engine.
+
+[]
+
+Event Recommender Engine
+
+App creates recommendations to the User based on recent purchases.
+
+The event recommender engine receives a message everytime a User uses the Ticket Purchase application.
+
+The EventRecommender class takes User and a model name (the one that is currently being used) and creates a recommendation for the user based on recent ticket requests.
+
+The EventRecommender works as a Facade as it simplifies the underlying complexity of classes derived from the AbstractRecommenderModel, like NlpRecommenderModel and PopularityRecommenderModel.
+
+We have a Template Method with the AbstractRecommenderModel and its derived classes. The AbstractRecommenderModel implements some of the functionalities of the model, but leaves the heavy lifting of creating suggestions for the derived classes.
+
+It sends messages to the Notification Engine.
+
+[]
+
+Event Analytics Platform
+
+The event analytics platform gives general analytics about a specific event.
+
+It uses the Event inside the EventAnalyser to generate statistics about the event.
+
+Every time an User purchases a ticket to that specific event, the EventAnalyser is updated via a message.
+
+[]
+
+Notification Engine
+
+The app translates internal information of the system into proper notifications for the users, allowing the market department to modify the content to better address the User.
+
+It sends messages directed to all the other apps which receive notifications.
+
+Event Check-In
+
+The app allows an User instance to check-in into an Event, changing the user Ticket to checked-in. It sends messages to the Notification Engine and to the Event Analytics Platform.

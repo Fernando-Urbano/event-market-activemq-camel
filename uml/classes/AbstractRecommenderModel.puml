@@ -1,0 +1,8 @@
+@startuml AbstractRecommenderModel
+abstract class AbstractRecommenderModel {
+    - id : int
+    - user : User
+    + {abstract} recommend(n : int) : List<Event>
+    + {abstract} recommend() : List<Event>
+}
+@enduml

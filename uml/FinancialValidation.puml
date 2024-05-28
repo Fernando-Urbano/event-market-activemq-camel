@@ -1,0 +1,18 @@
+@startuml FinancialValidation
+title Financial Validation
+!include classes/FinancialInformation.puml
+!include classes/FinancialValidator.puml
+!include classes/PaymentMethod.puml
+!include classes/CardPayment.puml
+!include classes/CheckingAccountPayment.puml
+!include classes/TicketRequest.puml
+
+' Dependency from FinancialValidator to TicketRequest
+FinancialValidator ..> TicketRequest : uses
+
+' Composition from TicketRequest to FinancialInformation
+TicketRequest *-- "1" FinancialInformation
+
+' Dependency from FinancialValidator to PaymentMethod (handles payment processing)
+FinancialValidator ..> PaymentMethod : handles payment
+@enduml

@@ -1,0 +1,13 @@
+@startuml Location
+class Location {
+    - id : int
+    - address : String
+    - city : String
+    - zipcode : String
+    - state : String
+    - country : String
+    - createdAt : Date
+    + Location(address : String, city : String, zipcode : String, state : String, country : String)
+    + display() : String
+}
+@enduml

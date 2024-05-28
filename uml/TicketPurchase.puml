@@ -1,0 +1,38 @@
+@startuml TicketPurchase
+title Ticket Purchase
+!include classes/Event.puml
+!include classes/User.puml
+!include classes/Recipient.puml
+!include classes/TicketRequest.puml
+!include classes/TicketType.puml
+!include classes/FinancialInformation.puml
+!include classes/PaymentMethod.puml
+!include classes/CardPayment.puml
+!include classes/CheckingAccountPayment.puml
+!include classes/TicketTypeIterator.puml
+
+' Event and TicketType - Composition if each Event strictly owns its TicketTypes
+Event "1" *-- "1..*" TicketType
+
+' TicketRequest and TicketType - Composition
+TicketRequest *-- "1" TicketType
+
+' TicketRequest and FinancialInformation - Composition
+TicketRequest *-- "0..1" FinancialInformation
+
+' FinancialInformation and PaymentMethod - Composition
+FinancialInformation *-- "1" PaymentMethod : contains
+
+' Association between User and TicketRequest
+User -- TicketRequest : purchaser
+
+' FinancialInformation and PaymentMethod - Composition
+TicketTypeIterator *-- Event
+
+' Association between Recipient and TicketRequest
+Recipient -- TicketRequest : recipient
+
+' note "A User can be transformed into a Recipient during the ticket purchase process." as N1
+' N1 .. TicketRequest
+
+@enduml

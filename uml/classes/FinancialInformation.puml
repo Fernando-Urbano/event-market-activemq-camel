@@ -1,0 +1,9 @@
+@startuml FinancialInformation
+class FinancialInformation {
+    - id : int
+    - user : User
+    - paymentMethod : PaymentMethod
+    + FinancialInformation()
+    + FinancialInformation(paymentMethod : PaymentMethod)
+}
+@enduml

@@ -1,0 +1,14 @@
+@startuml TicketType
+class TicketType {
+    - id : int
+    - name : String
+    - description : String
+    - maxNumberOfPeople : int
+    - minimumAgeToAttend : int
+    - price : double
+    - event : Event
+    - createdAt : Date
+    + TicketType(name : String, description : String, maxNumberOfPeople : int, minimumAgeToAttend : int, price : double, event : Event)
+    + display() : String
+}
+@enduml

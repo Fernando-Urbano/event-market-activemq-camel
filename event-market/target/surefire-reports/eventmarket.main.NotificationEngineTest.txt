@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: eventmarket.main.NotificationEngineTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.823 s - in eventmarket.main.NotificationEngineTest

@@ -1,0 +1,2436 @@
+Tests of the event-market project:
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/RecipientTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class RecipientTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Recipient newRecipient;
+    private User newUser;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    }
+
+    @Test
+    void testRecipientCreation() {
+        em.getTransaction().begin();
+        newRecipient = new Recipient("Test Recipient", "recipient@test.com", new Date());
+        em.persist(newRecipient);
+        em.getTransaction().commit();
+        
+        Recipient retrievedRecipient = em.find(Recipient.class, newRecipient.getId());
+        assertNotNull(retrievedRecipient);
+        assertEquals("Test Recipient", retrievedRecipient.getName());
+        assertEquals("recipient@test.com", retrievedRecipient.getEmail());
+    }
+
+    @Test
+    void testRecipientUpdate() {
+        em.getTransaction().begin();
+        newRecipient = new Recipient("Original Name", "original@test.com", new Date());
+        em.persist(newRecipient);
+        em.getTransaction().commit();
+
+        Recipient retrievedRecipient = em.find(Recipient.class, newRecipient.getId());
+        assertNotNull(retrievedRecipient);
+        em.getTransaction().begin();
+        retrievedRecipient.setName("Updated Name");
+        retrievedRecipient.setEmail("updated@test.com");
+        em.getTransaction().commit();
+
+        Recipient updatedRecipient = em.find(Recipient.class, retrievedRecipient.getId());
+        assertNotNull(updatedRecipient);
+        assertEquals("Updated Name", updatedRecipient.getName());
+        assertEquals("updated@test.com", updatedRecipient.getEmail());
+    }
+
+    @Test
+    void testRecipientDeletion() {
+        em.getTransaction().begin();
+        newRecipient = new Recipient("To Delete", "delete@test.com", new Date());
+        em.persist(newRecipient);
+        em.getTransaction().commit();
+
+        Recipient retrievedRecipient = em.find(Recipient.class, newRecipient.getId());
+        assertNotNull(retrievedRecipient);
+
+        em.getTransaction().begin();
+        em.remove(retrievedRecipient);
+        em.getTransaction().commit();
+
+        Recipient deletedRecipient = em.find(Recipient.class, newRecipient.getId());
+        assertNull(deletedRecipient);
+    }
+
+    @Test
+    void testTransformUserInRecipient() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2000, 1, 1));
+        em.persist(newUser);
+        em.getTransaction().commit();
+        Recipient newRecipient = newUser.transformToRecipient();
+        assertNotNull(newRecipient);
+        assertEquals(newUser.getName(), newRecipient.getName());
+        assertEquals(newUser.getEmail(), newRecipient.getEmail());
+    }        
+
+    @Test
+    void testConstructorRecipientFromUser() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2000, 1, 1));
+        em.persist(newUser);
+        em.getTransaction().commit();
+        Recipient newRecipient = new Recipient(newUser);
+        assertNotNull(newRecipient);
+        assertEquals(newUser.getName(), newRecipient.getName());
+        assertEquals(newUser.getEmail(), newRecipient.getEmail());
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newRecipient != null && newRecipient.getId() != 0) {
+            em.getTransaction().begin();
+            newRecipient = em.find(Recipient.class, newRecipient.getId());
+            if (newRecipient != null) {
+                em.remove(newRecipient);
+            }
+            em.getTransaction().commit();
+        }
+        // do the same for user
+        if (newUser != null && newUser.getId() != 0) {
+            em.getTransaction().begin();
+            newUser = em.find(User.class, newUser.getId());
+            if (newUser != null) {
+                em.remove(newUser);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/CreatorTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import eventmarket.main.CreateDate;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class CreatorTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Creator newCreator;
+    private Event newEvent;
+    private Location location;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    }
+
+    @Test
+    void testCreatorCreation() {
+        em.getTransaction().begin();
+        newCreator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(newCreator);
+        em.getTransaction().commit();
+        
+        Creator retrievedCreator = em.find(Creator.class, newCreator.getId());
+        assertNotNull(retrievedCreator);
+        assertEquals("Creator Name", retrievedCreator.getName());
+        assertEquals("creator@example.com", retrievedCreator.getEmail());
+    }
+
+    @Test
+    void testCreatorUpdate() {
+        em.getTransaction().begin();
+        newCreator = new Creator("Original Creator", "original@creator.com", "password123");
+        em.persist(newCreator);
+        em.getTransaction().commit();
+
+        Creator retrievedCreator = em.find(Creator.class, newCreator.getId());
+        assertNotNull(retrievedCreator);
+        em.getTransaction().begin();
+        retrievedCreator.setName("Updated Creator");
+        retrievedCreator.setEmail("updated@creator.com");
+        em.getTransaction().commit();
+
+        Creator updatedCreator = em.find(Creator.class, retrievedCreator.getId());
+        assertNotNull(updatedCreator);
+        assertEquals("Updated Creator", updatedCreator.getName());
+        assertEquals("updated@creator.com", updatedCreator.getEmail());
+    }
+
+    @Test
+    void testCreatorDeletion() {
+        em.getTransaction().begin();
+        newCreator = new Creator("To Delete", "delete@creator.com", "password");
+        em.persist(newCreator);
+        em.getTransaction().commit();
+
+        Creator retrievedCreator = em.find(Creator.class, newCreator.getId());
+        assertNotNull(retrievedCreator);
+
+        em.getTransaction().begin();
+        em.remove(retrievedCreator);
+        em.getTransaction().commit();
+
+        Creator deletedCreator = em.find(Creator.class, newCreator.getId());
+        assertNull(deletedCreator);
+    }
+
+    @Test
+    void testAddEvent() {
+        em.getTransaction().begin();
+        newCreator = new Creator("Test Creator", "testcreator@creator.com", "password");
+        em.persist(newCreator);
+        em.getTransaction().commit();
+        location = new Location("Main Streem", "New York", "60931", "CT", "USA");
+        newEvent = new Event(
+            "Event Name",
+            location,
+            CreateDate.createDate(0, 0, 0),
+            CreateDate.createDate(1, 0, 0),
+            "Event Description",
+            "Event tagline"
+        );
+        newCreator.addEvent(newEvent);
+        em.getTransaction().begin();
+        em.persist(newEvent);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testCreatorDeletionAfterAddedEvent() {
+        em.getTransaction().begin();
+        newCreator = new Creator("Test Creator", "testcreator@creator.com", "password");
+        em.persist(newCreator);
+        em.getTransaction().commit();
+        location = new Location("Main Streem", "New York", "60931", "CT", "USA");   
+        newEvent = new Event(
+            "Event Name",
+            location,
+            CreateDate.createDate(0, 0, 0),
+            CreateDate.createDate(1, 0, 0),
+            "Event Description",
+            "Event tagline"
+        );  
+        newCreator.addEvent(newEvent);
+        em.getTransaction().begin();    
+        em.persist(newEvent);
+        em.getTransaction().commit();
+        em.getTransaction().begin(); 
+        em.remove(newCreator);
+        em.getTransaction().commit();
+        Creator deletedCreator = em.find(Creator.class, newCreator.getId());
+        assertNull(deletedCreator);
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNull(retrievedEvent);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newCreator != null && newCreator.getId() != 0) {
+            em.getTransaction().begin();
+            newCreator = em.find(Creator.class, newCreator.getId());
+            if (newCreator != null) {
+                em.remove(newCreator);
+            }
+            em.getTransaction().commit();
+        }
+        if (newEvent != null && newEvent.getId() != 0) {
+            em.getTransaction().begin();
+            newEvent = em.find(Event.class, newEvent.getId());
+            if (newEvent != null) {
+                em.remove(newEvent);
+            }
+            em.getTransaction().commit();
+        }
+        if (location != null && location.getId() != 0) {
+            em.getTransaction().begin();
+            location = em.find(Location.class, location.getId());
+            if (location != null) {
+                em.remove(location);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/TicketTypeTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TicketTypeTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private TicketType newTicketType;
+    private Event newEvent;
+    private Location location;
+    private Creator creator;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        location = new Location("123 Main St", "Anytown", "12345", "State", "Country");
+        em.persist(location);
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        newEvent = new Event(
+            "Concert",
+            location,
+            CreateDate.createDate(2020, 5, 1),
+            CreateDate.createDate(2020, 5, 2),
+            "A great show",
+            "Don't miss it!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testTicketTypeCreation() {
+        em.getTransaction().begin();
+        newTicketType = new TicketType("VIP", "Exclusive area access", 100, 18, 299.99, newEvent);
+        em.persist(newTicketType);
+        em.getTransaction().commit();
+        
+        TicketType retrievedTicketType = em.find(TicketType.class, newTicketType.getId());
+        assertNotNull(retrievedTicketType);
+        assertEquals("VIP", retrievedTicketType.getName());
+        assertEquals(299.99, retrievedTicketType.getPrice());
+    }
+
+    @Test
+    void testTicketTypeUpdate() {
+        em.getTransaction().begin();
+        newTicketType = new TicketType("Standard", "Access to general areas", 500, 18, 99.99, newEvent);
+        em.persist(newTicketType);
+        em.getTransaction().commit();
+
+        TicketType retrievedTicketType = em.find(TicketType.class, newTicketType.getId());
+        assertNotNull(retrievedTicketType);
+        em.getTransaction().begin();
+        retrievedTicketType.setPrice(89.99);
+        em.getTransaction().commit();
+
+        TicketType updatedTicketType = em.find(TicketType.class, retrievedTicketType.getId());
+        assertNotNull(updatedTicketType);
+        assertEquals(89.99, updatedTicketType.getPrice());
+    }
+
+    @Test
+    void testTicketTypeDeletion() {
+        em.getTransaction().begin();
+        newTicketType = new TicketType(
+            "Early Bird",
+            "Early access tickets",
+            200,
+            18,
+            49.99, newEvent
+        );
+        em.persist(newTicketType);
+        em.getTransaction().commit();
+    
+        TicketType retrievedTicketType = em.find(TicketType.class, newTicketType.getId());
+        assertNotNull(retrievedTicketType);
+    
+        em.getTransaction().begin();
+        newEvent.removeTicketType(retrievedTicketType);  // Update the event
+        em.remove(retrievedTicketType);                  // Remove the ticket type
+        em.getTransaction().commit();
+    
+        TicketType deletedTicketType = em.find(TicketType.class, newTicketType.getId());
+        assertNull(deletedTicketType);  // This should pass if the deletion was successful
+    }
+    
+    
+
+    @Test
+    void testAddTicketTypeToEvent() {
+        em.getTransaction().begin();
+        newTicketType = new TicketType("General Admission", "Access to general areas", 1000, 18, 19.99, newEvent);
+        em.persist(newTicketType);
+        em.getTransaction().commit();
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(retrievedEvent);
+        assertEquals(1, retrievedEvent.getTicketTypes().size());
+    }
+
+    @Test
+    void testAddTicketTypeToEventSaveAndRetrieveEvent() {
+        em.getTransaction().begin();
+        newTicketType = new TicketType("General Admission", "Access to general areas", 1000, 18, 19.99, newEvent);
+        em.persist(newTicketType);
+        em.getTransaction().commit();
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(retrievedEvent);
+        assertEquals(1, retrievedEvent.getTicketTypes().size());
+        TicketType retrievedTicketType = retrievedEvent.getTicketTypes().get(0);
+        assertNotNull(retrievedTicketType);
+        assertEquals("General Admission", retrievedTicketType.getName());
+        em.getTransaction().begin();
+        em.persist(retrievedEvent);
+        em.getTransaction().commit();
+        Event savedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(savedEvent);
+        assertEquals(1, savedEvent.getTicketTypes().size());
+        TicketType savedTicketType = savedEvent.getTicketTypes().get(0);
+        assertNotNull(savedTicketType);
+        assertEquals("General Admission", savedTicketType.getName());
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newTicketType != null && newTicketType.getId() != 0) {
+            em.getTransaction().begin();
+            newTicketType = em.find(TicketType.class, newTicketType.getId());
+            if (newTicketType != null) {
+                em.remove(newTicketType);
+            }
+            em.getTransaction().commit();
+        }
+        if (newEvent != null && newEvent.getId() != 0) {
+            em.getTransaction().begin();
+            newEvent = em.find(Event.class, newEvent.getId());
+            if (newEvent != null) {
+                em.remove(newEvent);
+            }
+            em.getTransaction().commit();
+        }
+        if (creator != null && creator.getId() != 0) {
+            em.getTransaction().begin();
+            creator = em.find(Creator.class, creator.getId());
+            if (creator != null) {
+                em.remove(creator);
+            }
+            em.getTransaction().commit();
+        }
+        if (location != null && location.getId() != 0) {
+            em.getTransaction().begin();
+            location = em.find(Location.class, location.getId());
+            if (location != null) {
+                em.remove(location);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/NlpRecommenderModelTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class NlpRecommenderModelTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private User user;
+    private Event event1, event2, event3, event4;
+    private Ticket ticket;
+    private TicketRequest ticketRequest;
+    private NlpRecommenderModel recommender;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        user = new User("Test User", "testuser@example.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(user);
+
+        Creator creator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(creator);
+
+        Location location1 = new Location("Address 1", "City 1", "12345", "State 1", "Country 1");
+        em.persist(location1);
+
+        Location location2 = new Location("Address 2", "City 2", "67890", "State 2", "Country 2");
+        em.persist(location2);
+
+        Location location3 = new Location("Address 3", "City 3", "54321", "State 3", "Country 3");
+        em.persist(location3);
+
+        Location location4 = new Location("Address 4", "City 4", "98765", "State 4", "Country 4");
+        em.persist(location4);
+
+        event1 = new Event("Event 1", location1, CreateDate.createDate(2023, 1, 1), CreateDate.createDate(2023, 1, 2), "Description 1", "Tagline 1");
+        event1.setCreator(creator);
+        em.persist(event1);
+
+        event2 = new Event("Event 2", location2, CreateDate.createDate(2023, 2, 1), CreateDate.createDate(2023, 2, 2), "Description 2", "Tagline 2");
+        event2.setCreator(creator);
+        em.persist(event2);
+
+        event3 = new Event("Event 3", location3, CreateDate.createDate(2023, 3, 1), CreateDate.createDate(2023, 3, 2), "Description 3", "Tagline 3");
+        event3.setCreator(creator);
+        em.persist(event3);
+
+        event4 = new Event("Event 4", location4, CreateDate.createDate(2023, 4, 1), CreateDate.createDate(2023, 4, 2), "Description 4", "Tagline 4");
+        event4.setCreator(creator);
+        em.persist(event4);
+
+        TicketType ticketType1 = new TicketType(
+            "VIP", "VIP access",
+            100, 18, 200.0, event1
+        );
+        em.persist(ticketType1);
+
+        TicketType ticketType2 = new TicketType(
+            "General", "General access", 100, 18, 100.0, event2
+        );
+        em.persist(ticketType2);
+
+        Recipient recipient = new Recipient(
+            "Recipient Name", "recipient@example.com", CreateDate.createDate(1990, 1, 1)
+        );
+        em.persist(recipient);
+
+        FinancialInformation financialInformation = new FinancialInformation(
+            new CardPayment("1234567890123456", "John Doe",
+            CreateDate.createDate(2025, 12, 1), "123")
+        );
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+
+        ticketRequest = new TicketRequest(recipient, financialInformation, ticketType1);
+        ticketRequest.setUser(user);
+        user.saveTicketRequest(ticketRequest);
+        em.persist(ticketRequest);
+
+        ticket = new Ticket(ticketRequest);
+        ticket.setUser(user);
+        user.receiveTicket(ticket);
+        em.persist(ticket);
+
+        em.getTransaction().commit();
+
+        recommender = new NlpRecommenderModel(user);
+        recommender.setEntityManager(em);
+    }
+
+    @Test
+    void testRecommend() {
+        List<Event> recommendedEvents = recommender.recommend();
+        assertEquals(3, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRecommendWithCount() {
+        List<Event> recommendedEvents = recommender.recommend(2);
+        assertEquals(2, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+    
+    @Test
+    void testRecommendLessWhenThereAreNotEnoughEvents() {
+        em.getTransaction().begin();
+        List<Event> events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+        em.getTransaction().commit();
+        int eventCount = events.size();
+        List<Event> recommendedEvents = recommender.recommend(eventCount+10);
+        assertTrue(eventCount >= recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRecommendZeroOrNegativeNumber() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<Event> recommendedEvents = recommender.recommend(-1);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<Event> recommendedEvents = recommender.recommend(0);
+        });
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (em != null) {
+            em.getTransaction().begin();
+
+            if (ticket != null && em.contains(ticket)) {
+                em.remove(ticket);
+            }
+
+            if (ticketRequest != null && em.contains(ticketRequest)) {
+                em.remove(ticketRequest);
+            }
+
+            if (user != null && em.contains(user)) {
+                for (FinancialInformation financialInformation : user.getFinancialInformation()) {
+                    if (financialInformation != null && em.contains(financialInformation)) {
+                        PaymentMethod paymentMethod = financialInformation.getPaymentMethod();
+                        if (paymentMethod != null && em.contains(paymentMethod)) {
+                            em.remove(paymentMethod);
+                        }
+                        em.remove(financialInformation);
+                    }
+                }
+                em.remove(user);
+            }
+
+            if (event1 != null && em.contains(event1)) {
+                em.remove(event1);
+            }
+
+            if (event2 != null && em.contains(event2)) {
+                em.remove(event2);
+            }
+
+            if (event3 != null && em.contains(event3)) {
+                em.remove(event3);
+            }
+
+            if (event4 != null && em.contains(event4)) {
+                em.remove(event4);
+            }
+
+            em.getTransaction().commit();
+            em.close();
+        }
+
+        if (emf != null) {
+            emf.close();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/FinancialInformationTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class FinancialInformationTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private FinancialInformation newFinancialInformation;
+    private User newUser;
+    private PaymentMethod newPaymentMethod;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        newUser = new User("John Doe", "john@financialexample.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(newUser);
+        newPaymentMethod = new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        em.persist(newPaymentMethod);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testFinancialInformationCreation() {
+        em.getTransaction().begin();
+        em.persist(newPaymentMethod);
+        newFinancialInformation = new FinancialInformation(newPaymentMethod);
+        newFinancialInformation.setUser(newUser);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        em.getTransaction().commit();
+    
+        FinancialInformation retrievedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNotNull(retrievedFinancialInformation);
+        assertEquals(newUser.getId(), retrievedFinancialInformation.getUser().getId());
+        assertEquals(newPaymentMethod.getId(), retrievedFinancialInformation.getPaymentMethod().getId());
+    }
+
+    @Test
+    void testFinancialInformationUpdate() {
+        em.getTransaction().begin();
+        newFinancialInformation = new FinancialInformation(newPaymentMethod);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        em.getTransaction().commit();
+
+        FinancialInformation retrievedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNotNull(retrievedFinancialInformation);
+
+        em.getTransaction().begin();
+        PaymentMethod updatedPaymentMethod = new CheckingAccountPayment("123456789", "987654321");
+        em.persist(updatedPaymentMethod);
+        retrievedFinancialInformation.setPaymentMethod(updatedPaymentMethod);
+        em.getTransaction().commit();
+
+        FinancialInformation updatedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNotNull(updatedFinancialInformation);
+        assertEquals(updatedPaymentMethod.getId(), updatedFinancialInformation.getPaymentMethod().getId());
+    }
+
+    @Test
+    void testFinancialInformationDeletion() {
+        em.getTransaction().begin();
+        newFinancialInformation = new FinancialInformation(newPaymentMethod);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        em.getTransaction().commit();
+    
+        FinancialInformation retrievedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNotNull(retrievedFinancialInformation);
+    
+        em.getTransaction().begin();
+        User user = newFinancialInformation.getUser();
+        if (user != null) {
+            user.getFinancialInformation().remove(newFinancialInformation);
+        }
+        em.remove(retrievedFinancialInformation);
+        em.getTransaction().commit();
+    
+        em.clear(); // Clear the persistence context cache
+    
+        FinancialInformation deletedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNull(deletedFinancialInformation);
+    }
+
+    @Test
+    void testFinancialInformationDeletionCascadesPaymentMethod() {
+        em.getTransaction().begin();
+        newFinancialInformation = new FinancialInformation(newPaymentMethod);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        em.getTransaction().commit();
+
+        FinancialInformation retrievedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNotNull(retrievedFinancialInformation);
+
+        int paymentMethodId = retrievedFinancialInformation.getPaymentMethod().getId();
+
+        em.getTransaction().begin();
+        em.remove(retrievedFinancialInformation);
+        User user = newFinancialInformation.getUser();
+        if (user != null) {
+            user.getFinancialInformation().remove(newFinancialInformation);
+        }
+        em.getTransaction().commit();
+
+        FinancialInformation deletedFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+        assertNull(deletedFinancialInformation);
+
+        PaymentMethod deletedPaymentMethod = em.find(PaymentMethod.class, paymentMethodId);
+        assertNull(deletedPaymentMethod);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newFinancialInformation != null && newFinancialInformation.getId() != 0) {
+            em.getTransaction().begin();
+            newFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+            if (newFinancialInformation != null) {
+                PaymentMethod paymentMethod = newFinancialInformation.getPaymentMethod();
+                if (paymentMethod != null) {
+                    em.remove(paymentMethod);
+                }
+                em.remove(newFinancialInformation);
+            }
+            em.getTransaction().commit();
+        }
+        if (newUser != null && newUser.getId() != 0) {
+            em.getTransaction().begin();
+            newUser = em.find(User.class, newUser.getId());
+            if (newUser != null) {
+                em.remove(newUser);
+            }
+            em.getTransaction().commit();
+        }
+        if (newPaymentMethod != null && newPaymentMethod.getId() != 0) {
+            em.getTransaction().begin();
+            newPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+            if (newPaymentMethod != null) {
+                em.remove(newPaymentMethod);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/UserTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
+import java.util.Date;
+
+import eventmarket.main.CreateDate;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class UserTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private User newUser;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    }
+
+    @Test
+    void testUserCreation() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2000, 1, 1));
+        em.persist(newUser);
+        em.getTransaction().commit();
+        User newUserFromDatabase = em.find(User.class, newUser.getId());
+        assertNotNull(newUserFromDatabase);
+        assertEquals(newUser.getName(), newUserFromDatabase.getName());
+        assertEquals(newUser.getEmail(), newUserFromDatabase.getEmail());
+    }
+
+    @Test
+    void testUserUpdate() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2020, 1, 1));
+        em.persist(newUser);
+        em.getTransaction().commit();
+        User newUserFromDatabase = em.find(User.class, newUser.getId());
+        assertNotNull(newUserFromDatabase);
+        assertEquals(newUser.getName(), newUserFromDatabase.getName());
+        assertEquals(newUser.getEmail(), newUserFromDatabase.getEmail());
+        em.getTransaction().begin();
+        newUserFromDatabase.setName("New Test");
+        newUserFromDatabase.setEmail("newtest@test.com");
+        em.getTransaction().commit();
+        User updatedUserFromDatabase = em.find(User.class, newUser.getId());
+        assertNotNull(updatedUserFromDatabase);
+        assertEquals(newUserFromDatabase.getName(), updatedUserFromDatabase.getName());
+        assertEquals(newUserFromDatabase.getEmail(), updatedUserFromDatabase.getEmail());
+    }
+
+    @Test
+    void testUserDeletion() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2020, 1, 1));
+        em.persist(newUser);
+        em.getTransaction().commit();
+        User newUserFromDatabase = em.find(User.class, newUser.getId());
+        assertNotNull(newUserFromDatabase);
+        em.getTransaction().begin();
+        em.remove(newUserFromDatabase);
+        em.getTransaction().commit();
+        User deletedUserFromDatabase = em.find(User.class, newUser.getId());
+        assertNull(deletedUserFromDatabase);
+        newUser = null;
+    }
+
+    @Test
+    void testGetAge() {
+        em.getTransaction().begin();
+        newUser = new User("Test", "test@test.com", "securePassword123", CreateDate.createDate(2000, 1, 1));
+        int userAge = newUser.getAge();
+        assertTrue(userAge >= 24);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newUser != null && newUser.getId() != 0) {
+            em.getTransaction().begin();
+            newUser = em.find(User.class, newUser.getId());
+            if (newUser != null) {
+                em.remove(newUser);
+                em.getTransaction().commit();
+            }
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/LocationTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class LocationTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Location newLocation;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    }
+
+    @Test
+    void testLocationCreation() {
+        em.getTransaction().begin();
+        newLocation = new Location("123 Festival Lane", "Festival City", "98765", "FunState", "FestCountry");
+        em.persist(newLocation);
+        em.getTransaction().commit();
+        
+        Location retrievedLocation = em.find(Location.class, newLocation.getId());
+        assertNotNull(retrievedLocation);
+        assertEquals("123 Festival Lane", retrievedLocation.getAddress());
+        assertEquals("Festival City", retrievedLocation.getCity());
+        assertEquals("98765", retrievedLocation.getZipcode());
+        assertEquals("FunState", retrievedLocation.getState());
+        assertEquals("FestCountry", retrievedLocation.getCountry());
+    }
+
+    @Test
+    void testLocationUpdate() {
+        em.getTransaction().begin();
+        newLocation = new Location("123 Initial Lane", "Initial City", "11111", "InitialState", "InitialCountry");
+        em.persist(newLocation);
+        em.getTransaction().commit();
+
+        Location retrievedLocation = em.find(Location.class, newLocation.getId());
+        assertNotNull(retrievedLocation);
+        em.getTransaction().begin();
+        retrievedLocation.setAddress("Updated Address");
+        retrievedLocation.setCity("Updated City");
+        em.getTransaction().commit();
+
+        Location updatedLocation = em.find(Location.class, retrievedLocation.getId());
+        assertNotNull(updatedLocation);
+        assertEquals("Updated Address", updatedLocation.getAddress());
+        assertEquals("Updated City", updatedLocation.getCity());
+    }
+
+    @Test
+    void testLocationDeletion() {
+        em.getTransaction().begin();
+        newLocation = new Location("To Delete Lane", "Delete City", "00000", "DeleteState", "DeleteCountry");
+        em.persist(newLocation);
+        em.getTransaction().commit();
+
+        Location retrievedLocation = em.find(Location.class, newLocation.getId());
+        assertNotNull(retrievedLocation);
+
+        em.getTransaction().begin();
+        em.remove(retrievedLocation);
+        em.getTransaction().commit();
+
+        Location deletedLocation = em.find(Location.class, newLocation.getId());
+        assertNull(deletedLocation);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newLocation != null && newLocation.getId() != 0) {
+            em.getTransaction().begin();
+            newLocation = em.find(Location.class, newLocation.getId());
+            if (newLocation != null) {
+                em.remove(newLocation);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/NotificationEngineTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class NotificationEngineTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private User user;
+    private Creator creator;
+    private Event event;
+    private TicketRequest ticketRequest;
+    private NotificationEngine notificationEngine;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        user = new User("Test User", "testuser@example.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(user);
+
+        creator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(creator);
+
+        Location location = new Location("123 Main St", "City", "12345", "State", "Country");
+        em.persist(location);
+
+        event = new Event("Event Name", location, CreateDate.createDate(2023, 1, 1, 0, 0, 0), CreateDate.createDate(2023, 1, 2), "Description", "Tagline");
+        event.setCreator(creator);
+        em.persist(event);
+
+        TicketType ticketType = new TicketType("VIP", "VIP access", 100, 18, 200.0, event);
+        em.persist(ticketType);
+
+        Recipient recipient = new Recipient("Recipient Name", "recipient@example.com", CreateDate.createDate(1990, 1, 1));
+        em.persist(recipient);
+
+        FinancialInformation financialInformation = new FinancialInformation(new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123"));
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+
+        ticketRequest = new TicketRequest(recipient, financialInformation, ticketType);
+        ticketRequest.setUser(user);
+        user.saveTicketRequest(ticketRequest);
+        em.persist(ticketRequest);
+
+        em.getTransaction().commit();
+
+        notificationEngine = new NotificationEngine();
+    }
+
+    @Test
+    void testUserCreated() {
+        notificationEngine.userCreated(user);
+        String expectedMessage = "🎉 Welcome to EventMarket, Test User! 🎉 We're absolutely thrilled to have you with us. Start exploring the amazing events we have and dive into a world of excitement!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testCreatorCreated() {
+        notificationEngine.creatorCreated(creator);
+        String expectedMessage = "👋 Hello Creator Name! Thank you for joining EventMarket as a creator. Start creating events and reach out to a wider audience. Let's make something incredible together!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testTicketPaymentApproved() {
+        notificationEngine.ticketPaymentApproved(user, ticketRequest);
+        String expectedMessage = "✅ Hi Test User, Your payment for the ticket type 'VIP' has been approved! Get ready to enjoy 'Event Name'. See you there!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testTicketPaymentRejected() {
+        notificationEngine.ticketPaymentRejected(user, ticketRequest);
+        String expectedMessage = "❌ Hi Test User, We're sorry to inform you that your payment for the ticket type 'VIP' for the event 'Event Name' has been rejected. Please try again or contact support.";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testTicketPaymentInProcess() {
+        notificationEngine.ticketPaymentInProcess(user, ticketRequest);
+        String expectedMessage = "⏳ Hi Test User, Your payment for the ticket type 'VIP' for the event 'Event Name' is currently being processed. You will be notified once it's approved. Stay tuned!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testRecommendation() {
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        notificationEngine.eventRecommendation(user, events);
+        String expectedMessage = "🌟 Hi Test User, based on your interests, we highly recommend the following events: 'Event Name' on Sun Jan 01 00:00:00 CST 2023. Don't miss out on these exciting opportunities!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testCreatorEventUpdate() {
+        notificationEngine.creatorEventUpdate(creator, event);
+        String expectedMessage = "👏 Hello Creator Name, Your event 'Event Name' has been successfully updated! You've sold 0 tickets so far. Keep up the fantastic work!";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+    @Test
+    void testEventCreated() {
+        notificationEngine.eventCreated(creator, event);
+        String expectedMessage = "🎉 Hi Creator Name, Your event 'Event Name' has been successfully created! Share it with the world and let the magic begin. 🌟";
+        assertEquals(expectedMessage, notificationEngine.getMessage());
+    }
+
+
+    @AfterEach
+    void tearDown() {
+        if (em != null) {
+            em.getTransaction().begin();
+
+            if (ticketRequest != null && em.contains(ticketRequest)) {
+                em.remove(ticketRequest);
+            }
+
+            if (user != null && em.contains(user)) {
+                for (FinancialInformation financialInformation : user.getFinancialInformation()) {
+                    if (financialInformation != null && em.contains(financialInformation)) {
+                        PaymentMethod paymentMethod = financialInformation.getPaymentMethod();
+                        if (paymentMethod != null && em.contains(paymentMethod)) {
+                            em.remove(paymentMethod);
+                        }
+                        em.remove(financialInformation);
+                    }
+                }
+                em.remove(user);
+            }
+
+            if (event != null && em.contains(event)) {
+                em.remove(event);
+            }
+
+            if (creator != null && em.contains(creator)) {
+                em.remove(creator);
+            }
+
+            em.getTransaction().commit();
+            em.close();
+        }
+
+        if (emf != null) {
+            emf.close();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/EventTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class EventTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Event newEvent;
+    private Location location;
+    private Creator creator;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        location = new Location("123 Main St", "Anytown", "12345", "State", "Country");
+        em.persist(location);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testEventCreation() {
+        em.getTransaction().begin();
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        Location location = new Location("123 Main St", "Anytown", "12345", "State", "Country");
+        em.persist(location);
+        newEvent = new Event(
+            "Summer Festival",
+            location,
+            CreateDate.createDate(2000, 0, 0, 13, 0, 0),
+            CreateDate.createDate(2000, 0, 0, 15, 0, 0),
+            "Fun in the sun", "Come join us!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        em.getTransaction().commit();
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(retrievedEvent);
+        assertEquals("Summer Festival", retrievedEvent.getName());
+        assertEquals(creator.getId(), retrievedEvent.getCreator().getId());
+    }
+    
+
+    @Test
+    void testEventUpdate() {
+        em.getTransaction().begin();
+        // Create and persist a Creator
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        
+        // Assuming location is already persisted in setUp, if not persist it here
+        newEvent = new Event(
+            "Summer Festival",
+            location,
+            CreateDate.createDate(2000, 0, 0, 13, 0, 0),
+            CreateDate.createDate(2000, 0, 0, 15, 0, 0),
+            "Fun in the sun", "Come join us!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        em.getTransaction().commit();
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(retrievedEvent);
+        em.getTransaction().begin();
+        retrievedEvent.setName("Updated Event");
+        retrievedEvent.setPublicDescription("Updated Description");
+        em.getTransaction().commit();
+        Event updatedEvent = em.find(Event.class, retrievedEvent.getId());
+        assertNotNull(updatedEvent);
+        assertEquals("Updated Event", updatedEvent.getName());
+        assertEquals("Updated Description", updatedEvent.getPublicDescription());
+    }
+
+    @Test
+    void testEventDeletion() {
+        em.getTransaction().begin();
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        newEvent = new Event(
+            "Summer Festival",
+            location,
+            CreateDate.createDate(2000, 0, 0, 13, 0, 0),
+            CreateDate.createDate(2000, 0, 0, 15, 0, 0),
+            "Fun in the sun", "Come join us!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        em.getTransaction().commit();
+        Event retrievedEvent = em.find(Event.class, newEvent.getId());
+        assertNotNull(retrievedEvent);
+        em.getTransaction().begin();
+        em.remove(retrievedEvent);
+        em.getTransaction().commit();
+        Event deletedEvent = em.find(Event.class, newEvent.getId());
+        assertNull(deletedEvent);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newEvent != null && newEvent.getId() != 0) {
+            em.getTransaction().begin();
+            newEvent = em.find(Event.class, newEvent.getId());
+            if (newEvent != null) {
+                em.remove(newEvent);
+            }
+            em.getTransaction().commit();
+        }
+        if (creator != null && creator.getId() != 0) {
+            em.getTransaction().begin();
+            creator = em.find(Creator.class, creator.getId());
+            if (creator != null) {
+                em.remove(creator);
+            }
+            em.getTransaction().commit();
+        }
+        if (location != null && location.getId() != 0) {
+            em.getTransaction().begin();
+            location = em.find(Location.class, location.getId());
+            if (location != null) {
+                em.remove(location);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/EventRecommenderTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class EventRecommenderTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private User user;
+    private Event event1, event2, event3, event4;
+    private Ticket ticket;
+    private TicketRequest ticketRequest;
+    private NlpRecommenderModel model;
+    private EventRecommender eventRecommender;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        user = new User("Test User", "testuser@example.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(user);
+
+        Creator creator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(creator);
+
+        Location location1 = new Location("Address 1", "City 1", "12345", "State 1", "Country 1");
+        em.persist(location1);
+
+        Location location2 = new Location("Address 2", "City 2", "67890", "State 2", "Country 2");
+        em.persist(location2);
+
+        Location location3 = new Location("Address 3", "City 3", "54321", "State 3", "Country 3");
+        em.persist(location3);
+
+        Location location4 = new Location("Address 4", "City 4", "98765", "State 4", "Country 4");
+        em.persist(location4);
+
+        event1 = new Event("Event 1", location1, CreateDate.createDate(2023, 1, 1), CreateDate.createDate(2023, 1, 2), "Description 1", "Tagline 1");
+        event1.setCreator(creator);
+        em.persist(event1);
+
+        event2 = new Event("Event 2", location2, CreateDate.createDate(2023, 2, 1), CreateDate.createDate(2023, 2, 2), "Description 2", "Tagline 2");
+        event2.setCreator(creator);
+        em.persist(event2);
+
+        event3 = new Event("Event 3", location3, CreateDate.createDate(2023, 3, 1), CreateDate.createDate(2023, 3, 2), "Description 3", "Tagline 3");
+        event3.setCreator(creator);
+        em.persist(event3);
+
+        event4 = new Event("Event 4", location4, CreateDate.createDate(2023, 4, 1), CreateDate.createDate(2023, 4, 2), "Description 4", "Tagline 4");
+        event4.setCreator(creator);
+        em.persist(event4);
+
+        TicketType ticketType1 = new TicketType("VIP", "VIP access", 100, 18, 200.0, event1);
+        em.persist(ticketType1);
+
+        TicketType ticketType2 = new TicketType("General", "General access", 100, 18, 100.0, event2);
+        em.persist(ticketType2);
+
+        Recipient recipient = new Recipient("Recipient Name", "recipient@example.com", CreateDate.createDate(1990, 1, 1));
+        em.persist(recipient);
+
+        FinancialInformation financialInformation = new FinancialInformation(new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123"));
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+
+        ticketRequest = new TicketRequest(recipient, financialInformation, ticketType1);
+        ticketRequest.setUser(user);
+        user.saveTicketRequest(ticketRequest);
+        em.persist(ticketRequest);
+
+        ticket = new Ticket(ticketRequest);
+        ticket.setUser(user);
+        user.receiveTicket(ticket);
+        em.persist(ticket);
+
+        em.getTransaction().commit();
+
+        model = new NlpRecommenderModel(user);
+        model.setEntityManager(em);
+        eventRecommender = new EventRecommender(model);
+    }
+
+    @Test
+    void testRequestRecommendation() {
+        eventRecommender.requestRecommendation();
+        List<Event> recommendedEvents = eventRecommender.sendRecommendation();
+        assertEquals(3, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRequestRecommendationWithCustomCount() {
+        eventRecommender.setNumberRecommendations(2);
+        eventRecommender.requestRecommendation();
+        List<Event> recommendedEvents = eventRecommender.sendRecommendation();
+        assertEquals(2, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (em != null) {
+            em.getTransaction().begin();
+
+            if (ticket != null && em.contains(ticket)) {
+                em.remove(ticket);
+            }
+
+            if (ticketRequest != null && em.contains(ticketRequest)) {
+                em.remove(ticketRequest);
+            }
+
+            if (user != null && em.contains(user)) {
+                for (FinancialInformation financialInformation : user.getFinancialInformation()) {
+                    if (financialInformation != null && em.contains(financialInformation)) {
+                        PaymentMethod paymentMethod = financialInformation.getPaymentMethod();
+                        if (paymentMethod != null && em.contains(paymentMethod)) {
+                            em.remove(paymentMethod);
+                        }
+                        em.remove(financialInformation);
+                    }
+                }
+                em.remove(user);
+            }
+            if (event1 != null && em.contains(event1)) {
+                em.remove(event1);
+            }
+            if (event2 != null && em.contains(event2)) {
+                em.remove(event2);
+            }
+            if (event3 != null && em.contains(event3)) {
+                em.remove(event3);
+            }
+            if (event4 != null && em.contains(event4)) {
+                em.remove(event4);
+            }
+            em.getTransaction().commit();
+            em.close();
+        }
+
+        if (emf != null) {
+            emf.close();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/PaymentMethodTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class PaymentMethodTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private PaymentMethod newPaymentMethod;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    }
+
+    @Test
+    void testCardPaymentCreation() {
+        em.getTransaction().begin();
+        newPaymentMethod = new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        em.persist(newPaymentMethod);
+        em.getTransaction().commit();
+        
+        PaymentMethod retrievedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNotNull(retrievedPaymentMethod);
+        assertTrue(retrievedPaymentMethod instanceof CardPayment);
+        CardPayment cardPayment = (CardPayment) retrievedPaymentMethod;
+        assertEquals("1234567890123456", cardPayment.getCardNumber());
+        assertEquals("John Doe", cardPayment.getCardHolder());
+    }
+
+    @Test
+    void testCheckingAccountPaymentCreation() {
+        em.getTransaction().begin();
+        newPaymentMethod = new CheckingAccountPayment("123456789", "987654321");
+        em.persist(newPaymentMethod);
+        em.getTransaction().commit();
+        
+        PaymentMethod retrievedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNotNull(retrievedPaymentMethod);
+        assertTrue(retrievedPaymentMethod instanceof CheckingAccountPayment);
+        CheckingAccountPayment checkingAccountPayment = (CheckingAccountPayment) retrievedPaymentMethod;
+        assertEquals("123456789", checkingAccountPayment.getAccountNumber());
+        assertEquals("987654321", checkingAccountPayment.getRoutingNumber());
+    }
+
+    @Test
+    void testPaymentMethodDeletion() {
+        em.getTransaction().begin();
+        newPaymentMethod = new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        em.persist(newPaymentMethod);
+        em.getTransaction().commit();
+
+        PaymentMethod retrievedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNotNull(retrievedPaymentMethod);
+
+        em.getTransaction().begin();
+        em.remove(retrievedPaymentMethod);
+        em.getTransaction().commit();
+
+        PaymentMethod deletedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNull(deletedPaymentMethod);
+    }
+
+    @Test
+    void testPaymentMethodUpdate() {
+        em.getTransaction().begin();
+        newPaymentMethod = new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        em.persist(newPaymentMethod);
+        em.getTransaction().commit();
+
+        PaymentMethod retrievedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNotNull(retrievedPaymentMethod);
+        assertTrue(retrievedPaymentMethod instanceof CardPayment);
+        
+        em.getTransaction().begin();
+        CardPayment cardPayment = (CardPayment) retrievedPaymentMethod;
+        cardPayment.setCardNumber("9876543210987654");
+        cardPayment.setCardHolder("Jane Smith");
+        em.getTransaction().commit();
+
+        PaymentMethod updatedPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+        assertNotNull(updatedPaymentMethod);
+        assertTrue(updatedPaymentMethod instanceof CardPayment);
+        CardPayment updatedCardPayment = (CardPayment) updatedPaymentMethod;
+        assertEquals("9876543210987654", updatedCardPayment.getCardNumber());
+        assertEquals("Jane Smith", updatedCardPayment.getCardHolder());
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newPaymentMethod != null && newPaymentMethod.getId() != 0) {
+            em.getTransaction().begin();
+            newPaymentMethod = em.find(PaymentMethod.class, newPaymentMethod.getId());
+            if (newPaymentMethod != null) {
+                em.remove(newPaymentMethod);
+            }
+            em.getTransaction().commit();
+        }
+        em.close();
+        emf.close();
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/TicketTypeIteratorTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TicketTypeIteratorTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Event event;
+    private Creator newCreator;
+    private TicketTypeIterator iterator;
+    private TicketType vip;
+    private TicketType general;
+    private TicketType earlyBird;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+    
+        em.getTransaction().begin();
+        Creator creator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(creator);
+    
+        event = new Event(
+            "Test Event",
+            new Location("Address", "City", "12345", "State", "Country"),
+            CreateDate.createDate(2023, 1, 1), CreateDate.createDate(2023, 1, 2),
+            "Test Description", "Test Tagline"
+        );
+        event.setCreator(creator);
+        em.persist(event);
+    
+        vip = new TicketType("VIP", "VIP access", 100, 18, 200.0, event);
+        general = new TicketType("General", "General admission", 500, 18, 100.0, event);
+        earlyBird = new TicketType("Early Bird", "Early bird special", 200, 18, 80.0, event);
+    
+        em.persist(vip);
+        em.persist(general);
+        em.persist(earlyBird);
+    
+        em.getTransaction().commit();
+    
+        event = em.find(Event.class, event.getId());
+        iterator = new TicketTypeIterator(event);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (event != null) {
+            em.getTransaction().begin();
+            event = em.find(Event.class, event.getId());
+            if (event != null) {
+                for (TicketType ticketType : event.getTicketTypes()) {
+                    em.remove(ticketType);
+                }
+                Creator creator = event.getCreator();
+                event.setCreator(null);
+                em.remove(event);
+                if (creator != null) {
+                    em.remove(creator);
+                }
+            }
+            em.getTransaction().commit();
+        }
+
+        if (em != null) {
+            em.close();
+        }
+        if (emf != null) {
+            emf.close();
+        }
+    }
+
+    @Test
+    void testNext() {
+        event = em.find(Event.class, event.getId());
+        iterator = new TicketTypeIterator(event);
+        assertEquals("VIP", iterator.next().getName());
+        assertEquals("General", iterator.next().getName());
+        assertEquals("Early Bird", iterator.next().getName());
+    }
+
+    @Test
+    void testNextWhenDone() {
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        assertThrows(IllegalStateException.class, () -> iterator.next());
+    }
+
+    @Test
+    void testGetSteps() {
+        assertEquals(0, iterator.getSteps());
+        iterator.next();
+        assertEquals(1, iterator.getSteps());
+        iterator.next();
+        assertEquals(2, iterator.getSteps());
+    }
+
+    @Test
+    void testSetSteps() {
+        iterator.setSteps(1);
+        assertEquals("General", iterator.current().getName());
+    }
+
+    @Test
+    void testSetStepsInvalidValue() {
+        assertThrows(IllegalArgumentException.class, () -> iterator.setSteps(-1));
+        assertThrows(IllegalArgumentException.class, () -> iterator.setSteps(3));
+    }
+
+    @Test
+    void testIsDone() {
+        assertFalse(iterator.isDone());
+        iterator.next();
+        assertFalse(iterator.isDone());
+        iterator.next();
+        assertFalse(iterator.isDone());
+        iterator.next();
+        assertTrue(iterator.isDone());
+    }
+
+    @Test
+    void testCurrent() {
+        assertEquals("VIP", iterator.current().getName());
+        iterator.next();
+        assertEquals("General", iterator.current().getName());
+    }
+
+    @Test
+    void testCurrentWhenDone() {
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        assertThrows(IllegalStateException.class, () -> iterator.current());
+    }
+
+    @Test
+    void testFirst() {
+        iterator.next();
+        iterator.next();
+        assertEquals("Early Bird", iterator.current().getName());
+        assertEquals("VIP", iterator.first().getName());
+        assertEquals("VIP", iterator.current().getName());
+    }
+
+}
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/PopularityRecommenderModelTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class PopularityRecommenderModelTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private User user;
+    private Event event1, event2, event3, event4;
+    private Ticket ticket;
+    private TicketRequest ticketRequest;
+    private PopularityRecommenderModel recommender;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        user = new User("Test User", "testuser@example.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(user);
+
+        Creator creator = new Creator("Creator Name", "creator@example.com", "securePassword");
+        em.persist(creator);
+
+        Location location1 = new Location("Address 1", "City 1", "12345", "State 1", "Country 1");
+        em.persist(location1);
+
+        Location location2 = new Location("Address 2", "City 2", "67890", "State 2", "Country 2");
+        em.persist(location2);
+
+        Location location3 = new Location("Address 3", "City 3", "54321", "State 3", "Country 3");
+        em.persist(location3);
+
+        Location location4 = new Location("Address 4", "City 4", "98765", "State 4", "Country 4");
+        em.persist(location4);
+
+        event1 = new Event("Event 1", location1, CreateDate.createDate(2023, 1, 1), CreateDate.createDate(2023, 1, 2), "Description 1", "Tagline 1");
+        event1.setCreator(creator);
+        em.persist(event1);
+
+        event2 = new Event("Event 2", location2, CreateDate.createDate(2023, 2, 1), CreateDate.createDate(2023, 2, 2), "Description 2", "Tagline 2");
+        event2.setCreator(creator);
+        em.persist(event2);
+
+        event3 = new Event("Event 3", location3, CreateDate.createDate(2023, 3, 1), CreateDate.createDate(2023, 3, 2), "Description 3", "Tagline 3");
+        event3.setCreator(creator);
+        em.persist(event3);
+
+        event4 = new Event("Event 4", location4, CreateDate.createDate(2023, 4, 1), CreateDate.createDate(2023, 4, 2), "Description 4", "Tagline 4");
+        event4.setCreator(creator);
+        em.persist(event4);
+
+        TicketType ticketType1 = new TicketType(
+            "VIP", "VIP access",
+            100, 18, 200.0, event1
+        );
+        em.persist(ticketType1);
+
+        TicketType ticketType2 = new TicketType(
+            "General", "General access", 100, 18, 100.0, event2
+        );
+        em.persist(ticketType2);
+
+        Recipient recipient = new Recipient(
+            "Recipient Name", "recipient@example.com", CreateDate.createDate(1990, 1, 1)
+        );
+        em.persist(recipient);
+
+        FinancialInformation financialInformation = new FinancialInformation(
+            new CardPayment("1234567890123456", "John Doe",
+            CreateDate.createDate(2025, 12, 1), "123")
+        );
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+
+        ticketRequest = new TicketRequest(recipient, financialInformation, ticketType1);
+        ticketRequest.setUser(user);
+        user.saveTicketRequest(ticketRequest);
+        em.persist(ticketRequest);
+
+        ticket = new Ticket(ticketRequest);
+        ticket.setUser(user);
+        user.receiveTicket(ticket);
+        em.persist(ticket);
+
+        em.getTransaction().commit();
+
+        recommender = new PopularityRecommenderModel(user);
+        recommender.setEntityManager(em);
+    }
+
+    @Test
+    void testRecommend() {
+        List<Event> recommendedEvents = recommender.recommend();
+        assertEquals(3, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRecommendWithCount() {
+        List<Event> recommendedEvents = recommender.recommend(2);
+        assertEquals(2, recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRecommendLessWhenThereAreNotEnoughEvents() {
+        em.getTransaction().begin();
+        List<Event> events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+        em.getTransaction().commit();
+        int eventCount = events.size();
+        List<Event> recommendedEvents = recommender.recommend(eventCount+10);
+        assertTrue(eventCount >= recommendedEvents.size());
+        assertFalse(recommendedEvents.contains(event1));
+    }
+
+    @Test
+    void testRecommendZeroOrNegativeNumber() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<Event> recommendedEvents = recommender.recommend(-1);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<Event> recommendedEvents = recommender.recommend(0);
+        });
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (em != null) {
+            em.getTransaction().begin();
+
+            if (ticket != null && em.contains(ticket)) {
+                em.remove(ticket);
+            }
+
+            if (ticketRequest != null && em.contains(ticketRequest)) {
+                em.remove(ticketRequest);
+            }
+
+            if (user != null && em.contains(user)) {
+                for (FinancialInformation financialInformation : user.getFinancialInformation()) {
+                    if (financialInformation != null && em.contains(financialInformation)) {
+                        PaymentMethod paymentMethod = financialInformation.getPaymentMethod();
+                        if (paymentMethod != null && em.contains(paymentMethod)) {
+                            em.remove(paymentMethod);
+                        }
+                        em.remove(financialInformation);
+                    }
+                }
+                em.remove(user);
+            }
+
+            if (event1 != null && em.contains(event1)) {
+                em.remove(event1);
+            }
+
+            if (event2 != null && em.contains(event2)) {
+                em.remove(event2);
+            }
+
+            if (event3 != null && em.contains(event3)) {
+                em.remove(event3);
+            }
+
+            if (event4 != null && em.contains(event4)) {
+                em.remove(event4);
+            }
+
+            em.getTransaction().commit();
+            em.close();
+        }
+
+        if (emf != null) {
+            emf.close();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/AppTest.java
+
+package eventmarket.main;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+/**
+ * Unit test for simple App.
+ */
+public class AppTest 
+    extends TestCase
+{
+    /**
+     * Create the test case
+     *
+     * @param testName name of the test case
+     */
+    public AppTest( String testName )
+    {
+        super( testName );
+    }
+
+    /**
+     * @return the suite of tests being tested
+     */
+    public static Test suite()
+    {
+        return new TestSuite( AppTest.class );
+    }
+
+    /**
+     * Rigourous Test :-)
+     */
+    public void testApp()
+    {
+        assertTrue( true );
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/TicketRequestTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TicketRequestTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private TicketRequest newTicketRequest;
+    private User newUser;
+    private Recipient newRecipient;
+    private FinancialInformation newFinancialInformation;
+    private TicketType newTicketType;
+    private Event newEvent;
+    private Location location;
+    private Creator creator;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        location = new Location("123 Main St", "Anytown", "12345", "State", "Country");
+        em.persist(location);
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        newEvent = new Event(
+            "Concert",
+            location,
+            CreateDate.createDate(2020, 5, 1),
+            CreateDate.createDate(2020, 5, 2),
+            "A great show",
+            "Don't miss it!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        newTicketType = new TicketType("VIP", "Exclusive area access", 100, 18, 299.99, newEvent);
+        em.persist(newTicketType);
+        newUser = new User("John Doe", "john@requestexample.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(newUser);
+        newRecipient = new Recipient("John Doe", "john@requestexample.com", CreateDate.createDate(1990, 1, 1));
+        em.persist(newRecipient);
+        PaymentMethod newPaymentMethod = new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        em.persist(newPaymentMethod);
+        newFinancialInformation = new FinancialInformation(newPaymentMethod);
+        newFinancialInformation.setUser(newUser);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testTicketRequestCreation() {
+        em.getTransaction().begin();
+        newTicketRequest = new TicketRequest(newRecipient, newFinancialInformation, newTicketType);
+        newTicketRequest.setUser(newUser);
+        newUser.saveTicketRequest(newTicketRequest);
+        em.persist(newTicketRequest);
+        em.getTransaction().commit();
+
+        TicketRequest retrievedTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+        assertNotNull(retrievedTicketRequest);
+        assertEquals(newRecipient.getId(), retrievedTicketRequest.getRecipient().getId());
+        assertEquals(newFinancialInformation.getId(), retrievedTicketRequest.getFinancialInformation().getId());
+        assertEquals(newTicketType.getId(), retrievedTicketRequest.getTicketType().getId());
+    }
+
+    @Test
+    void testTicketRequestUpdate() {
+        em.getTransaction().begin();
+        newTicketRequest = new TicketRequest(newRecipient, newFinancialInformation, newTicketType);
+        newTicketRequest.setUser(newUser);
+        newUser.saveTicketRequest(newTicketRequest);
+        em.persist(newTicketRequest);
+        em.getTransaction().commit();
+
+        TicketRequest retrievedTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+        assertNotNull(retrievedTicketRequest);
+        em.getTransaction().begin();
+        retrievedTicketRequest.setApproved(true);
+        em.getTransaction().commit();
+
+        TicketRequest updatedTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+        assertNotNull(updatedTicketRequest);
+        assertTrue(updatedTicketRequest.isApproved());
+    }
+
+    @Test
+    void testTicketRequestDeletion() {
+        // TODO: Fix this test. Problem happening in AfterEach method in case this test runs
+        
+        // em.getTransaction().begin();
+        // newTicketRequest = new TicketRequest(newRecipient, newFinancialInformation, newTicketType);
+        // newTicketRequest.setUser(newUser);
+        // newUser.saveTicketRequest(newTicketRequest);
+        // em.persist(newTicketRequest);
+        // em.getTransaction().commit();
+    
+        // TicketRequest retrievedTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+        // assertNotNull(retrievedTicketRequest);
+    
+        // em.getTransaction().begin();
+        // User user = retrievedTicketRequest.getUser();
+        // if (user != null) {
+        //     user.getTicketRequests().remove(retrievedTicketRequest);
+        // }
+        
+        // FinancialInformation financialInformation = retrievedTicketRequest.getFinancialInformation();
+        // if (financialInformation != null) {
+        //     financialInformation.setUser(null);
+        // }
+        
+        // em.remove(retrievedTicketRequest);
+        // em.getTransaction().commit();
+    
+        // em.clear();
+    
+        // TicketRequest deletedTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+        // assertNull(deletedTicketRequest);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newTicketRequest != null && newTicketRequest.getId() != 0) {
+            em.getTransaction().begin();
+            newTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+            if (newTicketRequest != null) {
+                User user = newTicketRequest.getUser();
+                if (user != null) {
+                    user.getTicketRequests().remove(newTicketRequest);
+                }
+                em.remove(newTicketRequest);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newFinancialInformation != null && newFinancialInformation.getId() != 0) {
+            em.getTransaction().begin();
+            newFinancialInformation = em.find(FinancialInformation.class, newFinancialInformation.getId());
+            if (newFinancialInformation != null) {
+                PaymentMethod paymentMethod = newFinancialInformation.getPaymentMethod();
+                if (paymentMethod != null) {
+                    em.remove(paymentMethod);
+                }
+                em.remove(newFinancialInformation);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newUser != null && newUser.getId() != 0) {
+            em.getTransaction().begin();
+            newUser = em.find(User.class, newUser.getId());
+            if (newUser != null) {
+                em.remove(newUser);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newRecipient != null && newRecipient.getId() != 0) {
+            em.getTransaction().begin();
+            newRecipient = em.find(Recipient.class, newRecipient.getId());
+            if (newRecipient != null) {
+                em.remove(newRecipient);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newTicketType != null && newTicketType.getId() != 0) {
+            em.getTransaction().begin();
+            newTicketType = em.find(TicketType.class, newTicketType.getId());
+            if (newTicketType != null) {
+                em.remove(newTicketType);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newEvent != null && newEvent.getId() != 0) {
+            em.getTransaction().begin();
+            newEvent = em.find(Event.class, newEvent.getId());
+            if (newEvent != null) {
+                em.remove(newEvent);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (creator != null && creator.getId() != 0) {
+            em.getTransaction().begin();
+            creator = em.find(Creator.class, creator.getId());
+            if (creator != null) {
+                em.remove(creator);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (location != null && location.getId() != 0) {
+            em.getTransaction().begin();
+            location = em.find(Location.class, location.getId());
+            if (location != null) {
+                em.remove(location);
+            }
+            em.getTransaction().commit();
+        }
+
+        em.close();
+        emf.close();
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/test/java/eventmarket/main/TicketTest.java
+
+package eventmarket.main;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+class TicketTest {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private Ticket newTicket;
+    private User newUser;
+    private TicketRequest newTicketRequest;
+    private TicketType newTicketType;
+    private Event newEvent;
+    private Location location;
+    private Creator creator;
+
+    @BeforeEach
+    void setUp() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU-Test");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        location = new Location("123 Main St", "Anytown", "12345", "State", "Country");
+        em.persist(location);
+        creator = new Creator("Event Creator", "creator@example.com", "password");
+        em.persist(creator);
+        newEvent = new Event(
+            "Concert",
+            location,
+            CreateDate.createDate(2020, 5, 1),
+            CreateDate.createDate(2020, 5, 2),
+            "A great show",
+            "Don't miss it!"
+        );
+        newEvent.setCreator(creator);
+        em.persist(newEvent);
+        newTicketType = new TicketType("VIP", "Exclusive area access", 100, 18, 299.99, newEvent);
+        em.persist(newTicketType);
+        newUser = new User("John Doe", "john@example.com", "password", CreateDate.createDate(1990, 1, 1));
+        em.persist(newUser);
+        Recipient newRecipient = new Recipient("John Doe", "john@example.com", CreateDate.createDate(1990, 1, 1));
+        em.persist(newRecipient);
+        FinancialInformation newFinancialInformation = new FinancialInformation(new CardPayment("1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123"));
+        newFinancialInformation.setUser(newUser);
+        newUser.addFinancialInformation(newFinancialInformation);
+        em.persist(newFinancialInformation);
+        newTicketRequest = new TicketRequest(newRecipient, newFinancialInformation, newTicketType);
+        newTicketRequest.setUser(newUser);
+        newUser.saveTicketRequest(newTicketRequest);
+        em.persist(newTicketRequest);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    void testTicketCreation() {
+        em.getTransaction().begin();
+        newTicketRequest.approveRequest();
+        newTicket = newTicketRequest.transformToTicket();
+        em.persist(newTicket);
+        em.getTransaction().commit();
+
+        Ticket retrievedTicket = em.find(Ticket.class, newTicket.getId());
+        assertNotNull(retrievedTicket);
+        assertEquals(newTicketRequest.getId(), retrievedTicket.getTicketRequest().getId());
+        assertEquals(newUser.getId(), retrievedTicket.getUser().getId());
+    }
+
+    @Test
+    void testTicketUpdate() {
+        em.getTransaction().begin();
+        newTicketRequest.approveRequest();
+        newTicket = newTicketRequest.transformToTicket();
+        em.persist(newTicket);
+        em.getTransaction().commit();
+
+        Ticket retrievedTicket = em.find(Ticket.class, newTicket.getId());
+        assertNotNull(retrievedTicket);
+        em.getTransaction().begin();
+        retrievedTicket.setCheckedIn(true);
+        em.getTransaction().commit();
+
+        Ticket updatedTicket = em.find(Ticket.class, newTicket.getId());
+        assertNotNull(updatedTicket);
+        assertTrue(updatedTicket.isCheckedIn());
+    }
+
+    @Test
+    void testTicketDeletion() {
+        em.getTransaction().begin();
+        newTicketRequest.approveRequest();
+        newTicket = newTicketRequest.transformToTicket();
+        em.persist(newTicket);
+        em.getTransaction().commit();
+
+        Ticket retrievedTicket = em.find(Ticket.class, newTicket.getId());
+        assertNotNull(retrievedTicket);
+
+        em.getTransaction().begin();
+        User user = retrievedTicket.getUser();
+        if (user != null) {
+            user.getTickets().remove(retrievedTicket);
+        }
+        em.remove(retrievedTicket);
+        em.getTransaction().commit();
+
+        em.clear();
+
+        Ticket deletedTicket = em.find(Ticket.class, newTicket.getId());
+        assertNull(deletedTicket);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (newTicket != null && newTicket.getId() != 0) {
+            em.getTransaction().begin();
+            newTicket = em.find(Ticket.class, newTicket.getId());
+            if (newTicket != null) {
+                em.remove(newTicket);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newTicketRequest != null && newTicketRequest.getId() != 0) {
+            em.getTransaction().begin();
+            newTicketRequest = em.find(TicketRequest.class, newTicketRequest.getId());
+            if (newTicketRequest != null) {
+                em.remove(newTicketRequest);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newUser != null && newUser.getId() != 0) {
+            em.getTransaction().begin();
+            newUser = em.find(User.class, newUser.getId());
+            if (newUser != null) {
+                List<FinancialInformation> financialInformationList = newUser.getFinancialInformation();
+                for (FinancialInformation financialInformation : financialInformationList) {
+                    PaymentMethod paymentMethod = financialInformation.getPaymentMethod();
+                    if (paymentMethod != null) {
+                        em.remove(paymentMethod);
+                    }
+                    em.remove(financialInformation);
+                }
+                em.remove(newUser);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newTicketType != null && newTicketType.getId() != 0) {
+            em.getTransaction().begin();
+            newTicketType = em.find(TicketType.class, newTicketType.getId());
+            if (newTicketType != null) {
+                em.remove(newTicketType);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (newEvent != null && newEvent.getId() != 0) {
+            em.getTransaction().begin();
+            newEvent = em.find(Event.class, newEvent.getId());
+            if (newEvent != null) {
+                em.remove(newEvent);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (creator != null && creator.getId() != 0) {
+            em.getTransaction().begin();
+            creator = em.find(Creator.class, creator.getId());
+            if (creator != null) {
+                em.remove(creator);
+            }
+            em.getTransaction().commit();
+        }
+
+        if (location != null && location.getId() != 0) {
+            em.getTransaction().begin();
+            location = em.find(Location.class, location.getId());
+            if (location != null) {
+                em.remove(location);
+            }
+            em.getTransaction().commit();
+        }
+
+        em.close();
+        emf.close();
+    }
+}
+
+================================================================================
+

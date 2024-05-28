@@ -1,0 +1,42 @@
+@startuml
+!define RECTANGLE class
+hide circle
+hide empty members
+
+' ENTITIES CREATION
+' RECTANGLE UserCreation #lightblue
+' RECTANGLE CreatorCreation #lightblue
+' RECTANGLE EventCreation #lightblue
+' TICKET PURCHASE
+RECTANGLE TicketPurchase #lightblue
+RECTANGLE RecommendationEngine #lemonchiffon
+RECTANGLE TicketValidation #lemonchiffon
+RECTANGLE FinancialValidation #lemonchiffon
+RECTANGLE DeadLetter #white
+RECTANGLE Recommendations #white
+RECTANGLE InvalidMessage #white
+' ALL
+RECTANGLE NotificationEngine #lemonchiffon
+RECTANGLE NotificationSender #white
+
+' ENTITIES CREATION
+' UserCreation -down-> NotificationEngine : "notification.producer.user.creation"
+' CreatorCreation -down-> NotificationEngine : "notification.producer.creator.creation"
+' EventCreation -down-> NotificationEngine : "notification.producer.event.creation"
+' TICKET PURCHASE
+TicketPurchase -down-> FinancialValidation : "ticketvalidation.financial"
+TicketPurchase -down-> NotificationEngine : "notification.producer.ticketpayment.inprocess"
+TicketPurchase -down-> InvalidMessage : "ticketvalidation.invalidmessage"
+TicketPurchase -down-> TicketValidation : "ticketvalidation.completion"
+TicketPurchase -down-> RecommendationEngine : "recommender.builder"
+FinancialValidation -down-> TicketValidation : "ticketvalidation.completion"
+FinancialValidation -down-> NotificationEngine : "notification.producer.ticketpayment.rejected"
+TicketValidation -down-> NotificationEngine : "notification.producer.ticketpayment.approved"
+TicketValidation -up-> DeadLetter : "ticketvalidation7.deadletter"
+RecommendationEngine -up-> NotificationEngine : "notification.producer.recommendations"
+RecommendationEngine -up-> Recommendations : "topic:user.recommendations"
+NotificationEngine -down-> DeadLetter : "notification.deadletter"
+' ALL
+NotificationEngine -up-> NotificationSender : "notification.builder"
+
+@enduml

@@ -1,0 +1,5 @@
+@startuml PaymentMethod
+abstract class PaymentMethod {
+    # id : int
+}
+@enduml

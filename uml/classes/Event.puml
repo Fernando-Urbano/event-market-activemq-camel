@@ -1,0 +1,25 @@
+@startuml Event
+class Event {
+    - id : int
+    - creator : Creator
+    - startTime : Date
+    - endTime : Date
+    - purchaseCount : int
+    - checkedInCount : int
+    - name : String
+    - location : Location
+    - ticketTypes : List<TicketType>
+    - publicDescription : String
+    - publicTagline : String
+    - createdAt : Date
+    - entityManager : EntityManager
+    + Event(name : String, location : Location, startTime : Date, endTime : Date, publicDescription : String, publicTagline : String)
+    + display() : String
+    + getEventDurationInHours() : int
+    + getEventDuration() : String
+    + addTicketType(ticketType : TicketType) : void
+    + removeTicketType(ticketType : TicketType) : void
+    + getPurchaseCount() : int
+    + setCreator(creator : Creator) : void
+}
+@enduml

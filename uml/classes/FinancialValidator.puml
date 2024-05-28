@@ -1,0 +1,13 @@
+@startuml FinancialValidator
+class FinancialValidator {
+    - instance : FinancialValidator
+    - recentlyCheckedRequestIds : List<int>
+    - FinancialValidator()
+    + getInstance() : FinancialValidator
+    + requestValidation(ticketRequest : TicketRequest) : boolean
+    + addRecentlyCheckedRequestId(ticketRequestId : int) : void
+    + isRecentlyChecked(ticketRequestId : int) : boolean
+}
+
+FinancialValidator <<singleton>>
+@enduml

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: eventmarket.main.TicketTypeIteratorTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.414 s - in eventmarket.main.TicketTypeIteratorTest

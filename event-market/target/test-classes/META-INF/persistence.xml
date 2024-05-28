@@ -1,0 +1,40 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <!-- Test Persistence Unit -->
+    <persistence-unit name="EventMarketPU-Test" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>eventmarket.main.User</class>
+        <class>eventmarket.main.Creator</class>
+        <class>eventmarket.main.Event</class>
+        <class>eventmarket.main.Location</class>
+        <class>eventmarket.main.FinancialInformation</class>
+        <class>eventmarket.main.PaymentMethod</class>
+        <class>eventmarket.main.CardPayment</class>
+        <class>eventmarket.main.CheckingAccountPayment</class>
+        <class>eventmarket.main.Recipient</class>
+        <class>eventmarket.main.Ticket</class>
+        <class>eventmarket.main.TicketRequest</class>
+        <class>eventmarket.main.TicketType</class>
+        <class>eventmarket.main.TicketTypeIterator</class>
+        <class>eventmarket.main.NotificationEngine</class>
+        <class>eventmarket.main.NlpRecommenderModel</class>
+        <class>eventmarket.main.PopularityRecommenderModel</class>
+        <class>eventmarket.main.EventRecommender</class>
+        <class>eventmarket.main.AbstractRecommenderModel</class>
+        <class>eventmarket.main.AbstractIterator</class>
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/eventmarket_test_db"/>
+            <property name="javax.persistence.jdbc.user" value="fernandorochacorreaurbano"/>
+            <property name="javax.persistence.jdbc.password" value="fernando123"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

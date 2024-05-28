@@ -1,0 +1,13 @@
+@startuml TicketValidation
+title Ticket Validation
+!include classes/TicketRequest.puml
+!include classes/Ticket.puml
+!include classes/User.puml
+
+' Association from Ticket to TicketRequest indicating that each Ticket contains a TicketRequest
+Ticket -> TicketRequest : contains
+
+' Aggregation from User to Ticket indicating that User has a collection of Tickets
+User "1" *-- "many" Ticket : has
+
+@enduml

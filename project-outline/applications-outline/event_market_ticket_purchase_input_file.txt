@@ -1,0 +1,176 @@
+Input file
+
+================================================================================
+
+FILE NAME: event-market-ticket-purchase/src/main/java/eventmarketinput/EventMarketInput.java
+
+package eventmarketinput;
+
+import eventmarket.main.User;
+import eventmarket.main.CreateDate;
+import eventmarket.main.Event;
+import eventmarket.main.TicketType;
+import eventmarket.main.CardPayment;
+import eventmarket.main.CheckingAccountPayment;
+import eventmarket.main.PaymentMethod;
+import eventmarket.main.FinancialInformation;
+import eventmarket.main.Recipient;
+import eventmarket.main.TicketRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class EventMarketInput {
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private ObjectMapper objectMapper;
+
+    public EventMarketInput() {
+        emf = Persistence.createEntityManagerFactory("EventMarketPU");
+        em = emf.createEntityManager();
+        objectMapper = new ObjectMapper();
+    }
+
+    public void createTicketRequests() {
+        em.getTransaction().begin();
+
+        User user1 = findUserByEmail("elvis@outlook.com");
+        User user2 = findUserByEmail("airton@gmail.com");
+        User user3 = findUserByEmail("charlie@gmail.com");
+
+        addCardPaymentToUser(user1, "1234567890123456", "John Doe", CreateDate.createDate(2025, 12, 1), "123");
+        addCheckingAccountPaymentToUser(user2, "987654321", "123456789");
+        addCardPaymentToUser(user3, "3456789012345678", "Mike Jones", CreateDate.createDate(2027, 10, 1), "789");
+
+        Event event1 = findEventByName("Beach Bash");
+        Event event2 = findEventByName("Symphony Under the Stars");
+        Event event3 = findEventByName("Jazz in the Park");
+
+        TicketType vipTicketType1 = findTicketType(event1, "VIP");
+        TicketType generalTicketType1 = findTicketType(event1, "General Admission");
+
+        TicketType vipTicketType2 = findTicketType(event2, "VIP");
+        TicketType generalTicketType2 = findTicketType(event2, "General Admission");
+
+        TicketType vipTicketType3 = findTicketType(event3, "VIP");
+        TicketType generalTicketType3 = findTicketType(event3, "General Admission");
+
+        FinancialInformation financialInformation1 = user1.getFinancialInformation().get(0);
+        FinancialInformation financialInformation2 = user2.getFinancialInformation().get(0);
+        FinancialInformation financialInformation3 = user3.getFinancialInformation().get(0);
+
+        createTicketRequest(user1, vipTicketType1, financialInformation1);
+        createTicketRequest(user2, generalTicketType1, financialInformation2);
+        createTicketRequest(user3, vipTicketType2, financialInformation3);
+        createTicketRequest(user1, generalTicketType2, financialInformation1);
+        createTicketRequest(user2, vipTicketType3, financialInformation2);
+        createTicketRequest(user3, generalTicketType3, financialInformation3);
+
+        em.getTransaction().commit();
+
+        em.close();
+        emf.close();
+    }
+
+    private User findUserByEmail(String email) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
+        query.setParameter("email", email);
+        return query.getSingleResult();
+    }
+
+    private Event findEventByName(String eventName) {
+        TypedQuery<Event> query = em.createQuery("SELECT e FROM Event e WHERE e.name = :name", Event.class);
+        query.setParameter("name", eventName);
+        return query.getSingleResult();
+    }
+
+    private TicketType findTicketType(Event event, String ticketTypeName) {
+        TypedQuery<TicketType> query = em.createQuery("SELECT t FROM TicketType t WHERE t.event = :event AND t.name = :name", TicketType.class);
+        query.setParameter("event", event);
+        query.setParameter("name", ticketTypeName);
+        return query.getSingleResult();
+    }
+
+    private void addCardPaymentToUser(User user, String cardNumber, String cardHolder, java.util.Date expiryDate, String cvv) {
+        PaymentMethod paymentMethod = new CardPayment(cardNumber, cardHolder, expiryDate, cvv);
+        em.persist(paymentMethod);
+
+        FinancialInformation financialInformation = new FinancialInformation(paymentMethod);
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+    }
+
+    private void addCheckingAccountPaymentToUser(User user, String accountNumber, String routingNumber) {
+        PaymentMethod paymentMethod = new CheckingAccountPayment(accountNumber, routingNumber);
+        em.persist(paymentMethod);
+
+        FinancialInformation financialInformation = new FinancialInformation(paymentMethod);
+        financialInformation.setUser(user);
+        user.addFinancialInformation(financialInformation);
+        em.persist(financialInformation);
+    }
+
+    private Recipient findRecipientByEmail(String email) {
+        TypedQuery<Recipient> query = em.createQuery("SELECT r FROM Recipient r WHERE r.email = :email", Recipient.class);
+        query.setParameter("email", email);
+        return query.getResultStream().findFirst().orElse(null);
+    }
+
+    private void createTicketRequest(User user, TicketType ticketType, FinancialInformation financialInformation) {
+        Recipient recipient = findRecipientByEmail(user.getEmail());
+        if (recipient == null) {
+            recipient = new Recipient(user);
+            em.persist(recipient);
+        }
+
+        TicketRequest ticketRequest = new TicketRequest(recipient, financialInformation, ticketType);
+        ticketRequest.setUser(user);
+        user.saveTicketRequest(ticketRequest);
+        em.persist(ticketRequest);
+
+        writeFile(ticketRequest);
+    }
+
+    private void writeFile(TicketRequest ticketRequest) {
+        try {
+            File outboxDir = new File("data/outbox");
+            if (!outboxDir.exists()) {
+                outboxDir.mkdirs();
+            }
+
+            String formattedTicketRequestId = String.format("%010d", ticketRequest.getId());
+            File ticketRequestFile = new File(outboxDir, "ticketRequest-" + formattedTicketRequestId + "-creation.json");
+
+            Map<String, Object> jsonContent = new HashMap<>();
+            jsonContent.put("ticketRequestId", ticketRequest.getId());
+            jsonContent.put("userId", ticketRequest.getUser().getId());
+            jsonContent.put("ticketPrice", ticketRequest.getTicketType().getPrice());
+            jsonContent.put("message", "ticket-request-creation");
+
+            try (FileWriter writer = new FileWriter(ticketRequestFile)) {
+                objectMapper.writeValue(writer, jsonContent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        EventMarketInput ticketPurchase = new EventMarketInput();
+        ticketPurchase.createTicketRequests();
+    }
+}
+
+
+================================================================================
+

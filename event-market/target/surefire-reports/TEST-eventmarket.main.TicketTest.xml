@@ -1,0 +1,2283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="eventmarket.main.TicketTest" time="0.91" tests="3" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/test-classes:/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/classes:/Users/fernandorochacorreaurbano/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/hibernate-core/5.6.9.Final/hibernate-core-5.6.9.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/net/bytebuddy/byte-buddy/1.12.9/byte-buddy-1.12.9.jar:/Users/fernandorochacorreaurbano/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/postgresql/postgresql/42.4.0/postgresql-42.4.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/checkerframework/checker-qual/3.5.0/checker-qual-3.5.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/hibernate-entitymanager/5.4.32.Final/hibernate-entitymanager-5.4.32.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/dom4j/dom4j/2.1.3/dom4j-2.1.3.jar:"/>
+    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+    <property name="user.timezone" value="America/Chicago"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/amazon-corretto-21.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/surefire/surefirebooter-20240520180556488_3.jar /Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/surefire 2024-05-20T18-05-55_780-jvmRun1 surefire-20240520180556488_1tmp surefire_0-20240520180556488_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/test-classes:/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/classes:/Users/fernandorochacorreaurbano/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.2/junit-jupiter-api-5.8.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/junit/platform/junit-platform-commons/1.8.2/junit-platform-commons-1.8.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/hibernate-core/5.6.9.Final/hibernate-core-5.6.9.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/net/bytebuddy/byte-buddy/1.12.9/byte-buddy-1.12.9.jar:/Users/fernandorochacorreaurbano/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/Users/fernandorochacorreaurbano/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/postgresql/postgresql/42.4.0/postgresql-42.4.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/checkerframework/checker-qual/3.5.0/checker-qual-3.5.0.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/hibernate/hibernate-entitymanager/5.4.32.Final/hibernate-entitymanager-5.4.32.Final.jar:/Users/fernandorochacorreaurbano/.m2/repository/org/dom4j/dom4j/2.1.3/dom4j-2.1.3.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/fernandorochacorreaurbano"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2024-01-16"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/amazon-corretto-21.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market/target/surefire/surefirebooter-20240520180556488_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="21.0.2+13-LTS"/>
+    <property name="user.name" value="fernandorochacorreaurbano"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="14.4.1"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Corretto-21.0.2.13.1"/>
+    <property name="localRepository" value="/Users/fernandorochacorreaurbano/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-21/issues/"/>
+    <property name="java.io.tmpdir" value="/var/folders/km/t5mryd8x5ln51m7h8bw1h3cc0000gn/T/"/>
+    <property name="java.version" value="21.0.2"/>
+    <property name="user.dir" value="/Users/fernandorochacorreaurbano/Desktop/OO Architecture/finalproject-fernandourbano-uchicago/event-market"/>
+    <property name="os.arch" value="x86_64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/fernandorochacorreaurbano/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.vm.version" value="21.0.2+13-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testTicketUpdate" classname="eventmarket.main.TicketTest" time="0.379">
+    <system-out><![CDATA[Hibernate: 
+    
+    alter table card_payments 
+       drop constraint FKic7mb0ymisnucpq72pu7dcvcv
+Hibernate: 
+    
+    alter table checking_account_payments 
+       drop constraint FK6gj23lu9s32y52yy7xd4tgaf6
+Hibernate: 
+    
+    alter table events 
+       drop constraint FKjps29529ev7c8eivb26m69f2u
+Hibernate: 
+    
+    alter table events 
+       drop constraint FK7a9tiyl3gaugxrtjc2m97awui
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FK7p5g57g99opt9414b98lw9630
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FKo7ei496g72xfjbiyh5db863xi
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKoc13f9ha83d51mle3juj95n6u
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK8p9gn9u4arhs1m0h8d1d38bfp
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK6fjy9aonbpsxsk5cso9oovtqf
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKohueelmdfs1uf7y0fgv4uscy
+Hibernate: 
+    
+    alter table ticket_types 
+       drop constraint FKl83j9knh8jrssp3skaeubrrk
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK7gr4g6bxns8i848sxyy5ly47g
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK4eqsebpimnjen0q46ja6fl2hl
+Hibernate: 
+    
+    drop table if exists card_payments cascade
+Hibernate: 
+    
+    drop table if exists checking_account_payments cascade
+Hibernate: 
+    
+    drop table if exists creators cascade
+Hibernate: 
+    
+    drop table if exists events cascade
+Hibernate: 
+    
+    drop table if exists financial_information cascade
+Hibernate: 
+    
+    drop table if exists locations cascade
+Hibernate: 
+    
+    drop table if exists payment_methods cascade
+Hibernate: 
+    
+    drop table if exists recipients cascade
+Hibernate: 
+    
+    drop table if exists ticket_requests cascade
+Hibernate: 
+    
+    drop table if exists ticket_types cascade
+Hibernate: 
+    
+    drop table if exists tickets cascade
+Hibernate: 
+    
+    drop table if exists users cascade
+Hibernate: 
+    
+    create table card_payments (
+       cardHolder varchar(255) not null,
+        cardNumber varchar(255) not null,
+        cvv varchar(255) not null,
+        expirationDate date not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table checking_account_payments (
+       accountNumber varchar(255) not null,
+        routingNumber varchar(255) not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table creators (
+       id  serial not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table events (
+       id  serial not null,
+        checkedInCount int4 not null,
+        created_at timestamp not null,
+        endTime timestamp not null,
+        name varchar(255) not null,
+        publicDescription varchar(255) not null,
+        publicTagline varchar(255) not null,
+        purchaseCount int4 not null,
+        startTime timestamp not null,
+        creator_id int4 not null,
+        location_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table financial_information (
+       id  serial not null,
+        payment_method_id int4,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table locations (
+       id  serial not null,
+        address varchar(255) not null,
+        city varchar(255) not null,
+        country varchar(255) not null,
+        created_at timestamp not null,
+        state varchar(255) not null,
+        zipcode varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table payment_methods (
+       id  serial not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table recipients (
+       id  serial not null,
+        birthDate date not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_requests (
+       id  serial not null,
+        approved boolean not null,
+        created_at timestamp not null,
+        financial_information_id int4,
+        recipient_id int4 not null,
+        ticket_type_id int4 not null,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_types (
+       id  serial not null,
+        created_at timestamp not null,
+        description varchar(255) not null,
+        maxNumberOfPeople int4 not null,
+        minimumAgeToAttend int4 not null,
+        name varchar(255) not null,
+        price float8 not null,
+        event_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table tickets (
+       id  serial not null,
+        checkedIn boolean not null,
+        created_at timestamp not null,
+        ticket_request_id int4 not null,
+        user_id int4,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table users (
+       id  serial not null,
+        birthDate date,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        receives_emails boolean not null,
+        receives_pushs boolean not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    alter table creators 
+       add constraint UK_ctcc11eiqhscs3nex9hpniri3 unique (email)
+Hibernate: 
+    
+    alter table recipients 
+       add constraint UK_6gpos5vs0ldsagne4t1vw2222 unique (email)
+Hibernate: 
+    
+    alter table users 
+       add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: 
+    
+    alter table card_payments 
+       add constraint FKic7mb0ymisnucpq72pu7dcvcv 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table checking_account_payments 
+       add constraint FK6gj23lu9s32y52yy7xd4tgaf6 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table events 
+       add constraint FKjps29529ev7c8eivb26m69f2u 
+       foreign key (creator_id) 
+       references creators
+Hibernate: 
+    
+    alter table events 
+       add constraint FK7a9tiyl3gaugxrtjc2m97awui 
+       foreign key (location_id) 
+       references locations
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FK7p5g57g99opt9414b98lw9630 
+       foreign key (payment_method_id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FKo7ei496g72xfjbiyh5db863xi 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKoc13f9ha83d51mle3juj95n6u 
+       foreign key (financial_information_id) 
+       references financial_information
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK8p9gn9u4arhs1m0h8d1d38bfp 
+       foreign key (recipient_id) 
+       references recipients
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK6fjy9aonbpsxsk5cso9oovtqf 
+       foreign key (ticket_type_id) 
+       references ticket_types
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKohueelmdfs1uf7y0fgv4uscy 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_types 
+       add constraint FKl83j9knh8jrssp3skaeubrrk 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK7gr4g6bxns8i848sxyy5ly47g 
+       foreign key (ticket_request_id) 
+       references ticket_requests
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK4eqsebpimnjen0q46ja6fl2hl 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    insert 
+    into
+        locations
+        (address, city, country, created_at, state, zipcode) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        creators
+        (created_at, email, name, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        events
+        (checkedInCount, created_at, creator_id, endTime, location_id, name, publicDescription, publicTagline, purchaseCount, startTime) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_types
+        (created_at, description, event_id, maxNumberOfPeople, minimumAgeToAttend, name, price) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (birthDate, created_at, email, name, password, receives_emails, receives_pushs) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        recipients
+        (birthDate, created_at, email, name) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        payment_methods
+        default 
+    values
+        
+Hibernate: 
+    insert 
+    into
+        card_payments
+        (cardHolder, cardNumber, cvv, expirationDate, id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        financial_information
+        (payment_method_id, user_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_requests
+        (approved, created_at, financial_information_id, recipient_id, ticket_type_id, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tickets
+        (checkedIn, created_at, ticket_request_id, user_id) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    update
+        ticket_requests 
+    set
+        approved=?,
+        financial_information_id=?,
+        recipient_id=?,
+        ticket_type_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        tickets 
+    set
+        checkedIn=?,
+        ticket_request_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        tickets 
+    where
+        id=?
+Hibernate: 
+    update
+        financial_information 
+    set
+        payment_method_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        ticket_requests 
+    set
+        approved=?,
+        financial_information_id=?,
+        recipient_id=?,
+        ticket_type_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        card_payments 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        payment_methods 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        financial_information 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        ticket_requests 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        users 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        ticket_types 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        events 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        locations 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        creators 
+    where
+        id=?
+Hibernate: 
+    select
+        location0_.id as id1_5_0_,
+        location0_.address as address2_5_0_,
+        location0_.city as city3_5_0_,
+        location0_.country as country4_5_0_,
+        location0_.created_at as created_5_5_0_,
+        location0_.state as state6_5_0_,
+        location0_.zipcode as zipcode7_5_0_ 
+    from
+        locations location0_ 
+    where
+        location0_.id=?
+]]></system-out>
+    <system-err><![CDATA[May 20, 2024 6:06:03 PM org.hibernate.jpa.internal.util.LogHelper logPersistenceUnitInformation
+INFO: HHH000204: Processing PersistenceUnitInfo [name: EventMarketPU-Test]
+May 20, 2024 6:06:03 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+May 20, 2024 6:06:03 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+May 20, 2024 6:06:03 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {password=****, user=fernandorochacorreaurbano}
+May 20, 2024 6:06:03 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+May 20, 2024 6:06:03 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+May 20, 2024 6:06:03 PM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+May 20, 2024 6:06:03 PM org.hibernate.cfg.AnnotationBinder bindClass
+WARN: HHH000499: Using @AttributeOverride or @AttributeOverrides in conjunction with entity inheritance is not supported: eventmarket.main.CheckingAccountPayment. The overriding definitions are ignored.
+May 20, 2024 6:06:03 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@1db7a4ae] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:03 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@5ab70df7] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:03 PM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PoolState stop
+INFO: HHH10001008: Cleaning up connection pool [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+]]></system-err>
+  </testcase>
+  <testcase name="testTicketDeletion" classname="eventmarket.main.TicketTest" time="0.268">
+    <system-out><![CDATA[Hibernate: 
+    
+    alter table card_payments 
+       drop constraint FKic7mb0ymisnucpq72pu7dcvcv
+Hibernate: 
+    
+    alter table checking_account_payments 
+       drop constraint FK6gj23lu9s32y52yy7xd4tgaf6
+Hibernate: 
+    
+    alter table events 
+       drop constraint FKjps29529ev7c8eivb26m69f2u
+Hibernate: 
+    
+    alter table events 
+       drop constraint FK7a9tiyl3gaugxrtjc2m97awui
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FK7p5g57g99opt9414b98lw9630
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FKo7ei496g72xfjbiyh5db863xi
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKoc13f9ha83d51mle3juj95n6u
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK8p9gn9u4arhs1m0h8d1d38bfp
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK6fjy9aonbpsxsk5cso9oovtqf
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKohueelmdfs1uf7y0fgv4uscy
+Hibernate: 
+    
+    alter table ticket_types 
+       drop constraint FKl83j9knh8jrssp3skaeubrrk
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK7gr4g6bxns8i848sxyy5ly47g
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK4eqsebpimnjen0q46ja6fl2hl
+Hibernate: 
+    
+    drop table if exists card_payments cascade
+Hibernate: 
+    
+    drop table if exists checking_account_payments cascade
+Hibernate: 
+    
+    drop table if exists creators cascade
+Hibernate: 
+    
+    drop table if exists events cascade
+Hibernate: 
+    
+    drop table if exists financial_information cascade
+Hibernate: 
+    
+    drop table if exists locations cascade
+Hibernate: 
+    
+    drop table if exists payment_methods cascade
+Hibernate: 
+    
+    drop table if exists recipients cascade
+Hibernate: 
+    
+    drop table if exists ticket_requests cascade
+Hibernate: 
+    
+    drop table if exists ticket_types cascade
+Hibernate: 
+    
+    drop table if exists tickets cascade
+Hibernate: 
+    
+    drop table if exists users cascade
+Hibernate: 
+    
+    create table card_payments (
+       cardHolder varchar(255) not null,
+        cardNumber varchar(255) not null,
+        cvv varchar(255) not null,
+        expirationDate date not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table checking_account_payments (
+       accountNumber varchar(255) not null,
+        routingNumber varchar(255) not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table creators (
+       id  serial not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table events (
+       id  serial not null,
+        checkedInCount int4 not null,
+        created_at timestamp not null,
+        endTime timestamp not null,
+        name varchar(255) not null,
+        publicDescription varchar(255) not null,
+        publicTagline varchar(255) not null,
+        purchaseCount int4 not null,
+        startTime timestamp not null,
+        creator_id int4 not null,
+        location_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table financial_information (
+       id  serial not null,
+        payment_method_id int4,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table locations (
+       id  serial not null,
+        address varchar(255) not null,
+        city varchar(255) not null,
+        country varchar(255) not null,
+        created_at timestamp not null,
+        state varchar(255) not null,
+        zipcode varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table payment_methods (
+       id  serial not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table recipients (
+       id  serial not null,
+        birthDate date not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_requests (
+       id  serial not null,
+        approved boolean not null,
+        created_at timestamp not null,
+        financial_information_id int4,
+        recipient_id int4 not null,
+        ticket_type_id int4 not null,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_types (
+       id  serial not null,
+        created_at timestamp not null,
+        description varchar(255) not null,
+        maxNumberOfPeople int4 not null,
+        minimumAgeToAttend int4 not null,
+        name varchar(255) not null,
+        price float8 not null,
+        event_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table tickets (
+       id  serial not null,
+        checkedIn boolean not null,
+        created_at timestamp not null,
+        ticket_request_id int4 not null,
+        user_id int4,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table users (
+       id  serial not null,
+        birthDate date,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        receives_emails boolean not null,
+        receives_pushs boolean not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    alter table creators 
+       add constraint UK_ctcc11eiqhscs3nex9hpniri3 unique (email)
+Hibernate: 
+    
+    alter table recipients 
+       add constraint UK_6gpos5vs0ldsagne4t1vw2222 unique (email)
+Hibernate: 
+    
+    alter table users 
+       add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: 
+    
+    alter table card_payments 
+       add constraint FKic7mb0ymisnucpq72pu7dcvcv 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table checking_account_payments 
+       add constraint FK6gj23lu9s32y52yy7xd4tgaf6 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table events 
+       add constraint FKjps29529ev7c8eivb26m69f2u 
+       foreign key (creator_id) 
+       references creators
+Hibernate: 
+    
+    alter table events 
+       add constraint FK7a9tiyl3gaugxrtjc2m97awui 
+       foreign key (location_id) 
+       references locations
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FK7p5g57g99opt9414b98lw9630 
+       foreign key (payment_method_id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FKo7ei496g72xfjbiyh5db863xi 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKoc13f9ha83d51mle3juj95n6u 
+       foreign key (financial_information_id) 
+       references financial_information
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK8p9gn9u4arhs1m0h8d1d38bfp 
+       foreign key (recipient_id) 
+       references recipients
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK6fjy9aonbpsxsk5cso9oovtqf 
+       foreign key (ticket_type_id) 
+       references ticket_types
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKohueelmdfs1uf7y0fgv4uscy 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_types 
+       add constraint FKl83j9knh8jrssp3skaeubrrk 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK7gr4g6bxns8i848sxyy5ly47g 
+       foreign key (ticket_request_id) 
+       references ticket_requests
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK4eqsebpimnjen0q46ja6fl2hl 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    insert 
+    into
+        locations
+        (address, city, country, created_at, state, zipcode) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        creators
+        (created_at, email, name, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        events
+        (checkedInCount, created_at, creator_id, endTime, location_id, name, publicDescription, publicTagline, purchaseCount, startTime) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_types
+        (created_at, description, event_id, maxNumberOfPeople, minimumAgeToAttend, name, price) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (birthDate, created_at, email, name, password, receives_emails, receives_pushs) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        recipients
+        (birthDate, created_at, email, name) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        payment_methods
+        default 
+    values
+        
+Hibernate: 
+    insert 
+    into
+        card_payments
+        (cardHolder, cardNumber, cvv, expirationDate, id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        financial_information
+        (payment_method_id, user_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_requests
+        (approved, created_at, financial_information_id, recipient_id, ticket_type_id, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tickets
+        (checkedIn, created_at, ticket_request_id, user_id) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    update
+        ticket_requests 
+    set
+        approved=?,
+        financial_information_id=?,
+        recipient_id=?,
+        ticket_type_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        tickets 
+    where
+        id=?
+Hibernate: 
+    select
+        ticket0_.id as id1_10_0_,
+        ticket0_.checkedIn as checkedi2_10_0_,
+        ticket0_.created_at as created_3_10_0_,
+        ticket0_.ticket_request_id as ticket_r4_10_0_,
+        ticket0_.user_id as user_id5_10_0_,
+        ticketrequ1_.id as id1_8_1_,
+        ticketrequ1_.approved as approved2_8_1_,
+        ticketrequ1_.created_at as created_3_8_1_,
+        ticketrequ1_.financial_information_id as financia4_8_1_,
+        ticketrequ1_.recipient_id as recipien5_8_1_,
+        ticketrequ1_.ticket_type_id as ticket_t6_8_1_,
+        ticketrequ1_.user_id as user_id7_8_1_,
+        financiali2_.id as id1_4_2_,
+        financiali2_.payment_method_id as payment_2_4_2_,
+        financiali2_.user_id as user_id3_4_2_,
+        paymentmet3_.id as id1_6_3_,
+        paymentmet3_1_.cardHolder as cardhold1_0_3_,
+        paymentmet3_1_.cardNumber as cardnumb2_0_3_,
+        paymentmet3_1_.cvv as cvv3_0_3_,
+        paymentmet3_1_.expirationDate as expirati4_0_3_,
+        paymentmet3_2_.accountNumber as accountn1_1_3_,
+        paymentmet3_2_.routingNumber as routingn2_1_3_,
+        case 
+            when paymentmet3_1_.id is not null then 1 
+            when paymentmet3_2_.id is not null then 2 
+            when paymentmet3_.id is not null then 0 
+        end as clazz_3_,
+        user4_.id as id1_11_4_,
+        user4_.birthDate as birthdat2_11_4_,
+        user4_.created_at as created_3_11_4_,
+        user4_.email as email4_11_4_,
+        user4_.name as name5_11_4_,
+        user4_.password as password6_11_4_,
+        user4_.receives_emails as receives7_11_4_,
+        user4_.receives_pushs as receives8_11_4_,
+        recipient5_.id as id1_7_5_,
+        recipient5_.birthDate as birthdat2_7_5_,
+        recipient5_.created_at as created_3_7_5_,
+        recipient5_.email as email4_7_5_,
+        recipient5_.name as name5_7_5_,
+        tickettype6_.id as id1_9_6_,
+        tickettype6_.created_at as created_2_9_6_,
+        tickettype6_.description as descript3_9_6_,
+        tickettype6_.event_id as event_id8_9_6_,
+        tickettype6_.maxNumberOfPeople as maxnumbe4_9_6_,
+        tickettype6_.minimumAgeToAttend as minimuma5_9_6_,
+        tickettype6_.name as name6_9_6_,
+        tickettype6_.price as price7_9_6_,
+        event7_.id as id1_3_7_,
+        event7_.checkedInCount as checkedi2_3_7_,
+        event7_.created_at as created_3_3_7_,
+        event7_.creator_id as creator10_3_7_,
+        event7_.endTime as endtime4_3_7_,
+        event7_.location_id as locatio11_3_7_,
+        event7_.name as name5_3_7_,
+        event7_.publicDescription as publicde6_3_7_,
+        event7_.publicTagline as publicta7_3_7_,
+        event7_.purchaseCount as purchase8_3_7_,
+        event7_.startTime as starttim9_3_7_,
+        creator8_.id as id1_2_8_,
+        creator8_.created_at as created_2_2_8_,
+        creator8_.email as email3_2_8_,
+        creator8_.name as name4_2_8_,
+        creator8_.password as password5_2_8_,
+        location9_.id as id1_5_9_,
+        location9_.address as address2_5_9_,
+        location9_.city as city3_5_9_,
+        location9_.country as country4_5_9_,
+        location9_.created_at as created_5_5_9_,
+        location9_.state as state6_5_9_,
+        location9_.zipcode as zipcode7_5_9_,
+        user10_.id as id1_11_10_,
+        user10_.birthDate as birthdat2_11_10_,
+        user10_.created_at as created_3_11_10_,
+        user10_.email as email4_11_10_,
+        user10_.name as name5_11_10_,
+        user10_.password as password6_11_10_,
+        user10_.receives_emails as receives7_11_10_,
+        user10_.receives_pushs as receives8_11_10_,
+        user11_.id as id1_11_11_,
+        user11_.birthDate as birthdat2_11_11_,
+        user11_.created_at as created_3_11_11_,
+        user11_.email as email4_11_11_,
+        user11_.name as name5_11_11_,
+        user11_.password as password6_11_11_,
+        user11_.receives_emails as receives7_11_11_,
+        user11_.receives_pushs as receives8_11_11_ 
+    from
+        tickets ticket0_ 
+    inner join
+        ticket_requests ticketrequ1_ 
+            on ticket0_.ticket_request_id=ticketrequ1_.id 
+    left outer join
+        financial_information financiali2_ 
+            on ticketrequ1_.financial_information_id=financiali2_.id 
+    left outer join
+        payment_methods paymentmet3_ 
+            on financiali2_.payment_method_id=paymentmet3_.id 
+    left outer join
+        card_payments paymentmet3_1_ 
+            on paymentmet3_.id=paymentmet3_1_.id 
+    left outer join
+        checking_account_payments paymentmet3_2_ 
+            on paymentmet3_.id=paymentmet3_2_.id 
+    left outer join
+        users user4_ 
+            on financiali2_.user_id=user4_.id 
+    inner join
+        recipients recipient5_ 
+            on ticketrequ1_.recipient_id=recipient5_.id 
+    inner join
+        ticket_types tickettype6_ 
+            on ticketrequ1_.ticket_type_id=tickettype6_.id 
+    inner join
+        events event7_ 
+            on tickettype6_.event_id=event7_.id 
+    inner join
+        creators creator8_ 
+            on event7_.creator_id=creator8_.id 
+    inner join
+        locations location9_ 
+            on event7_.location_id=location9_.id 
+    inner join
+        users user10_ 
+            on ticketrequ1_.user_id=user10_.id 
+    left outer join
+        users user11_ 
+            on ticket0_.user_id=user11_.id 
+    where
+        ticket0_.id=?
+Hibernate: 
+    select
+        ticket0_.id as id1_10_0_,
+        ticket0_.checkedIn as checkedi2_10_0_,
+        ticket0_.created_at as created_3_10_0_,
+        ticket0_.ticket_request_id as ticket_r4_10_0_,
+        ticket0_.user_id as user_id5_10_0_,
+        ticketrequ1_.id as id1_8_1_,
+        ticketrequ1_.approved as approved2_8_1_,
+        ticketrequ1_.created_at as created_3_8_1_,
+        ticketrequ1_.financial_information_id as financia4_8_1_,
+        ticketrequ1_.recipient_id as recipien5_8_1_,
+        ticketrequ1_.ticket_type_id as ticket_t6_8_1_,
+        ticketrequ1_.user_id as user_id7_8_1_,
+        financiali2_.id as id1_4_2_,
+        financiali2_.payment_method_id as payment_2_4_2_,
+        financiali2_.user_id as user_id3_4_2_,
+        paymentmet3_.id as id1_6_3_,
+        paymentmet3_1_.cardHolder as cardhold1_0_3_,
+        paymentmet3_1_.cardNumber as cardnumb2_0_3_,
+        paymentmet3_1_.cvv as cvv3_0_3_,
+        paymentmet3_1_.expirationDate as expirati4_0_3_,
+        paymentmet3_2_.accountNumber as accountn1_1_3_,
+        paymentmet3_2_.routingNumber as routingn2_1_3_,
+        case 
+            when paymentmet3_1_.id is not null then 1 
+            when paymentmet3_2_.id is not null then 2 
+            when paymentmet3_.id is not null then 0 
+        end as clazz_3_,
+        user4_.id as id1_11_4_,
+        user4_.birthDate as birthdat2_11_4_,
+        user4_.created_at as created_3_11_4_,
+        user4_.email as email4_11_4_,
+        user4_.name as name5_11_4_,
+        user4_.password as password6_11_4_,
+        user4_.receives_emails as receives7_11_4_,
+        user4_.receives_pushs as receives8_11_4_,
+        recipient5_.id as id1_7_5_,
+        recipient5_.birthDate as birthdat2_7_5_,
+        recipient5_.created_at as created_3_7_5_,
+        recipient5_.email as email4_7_5_,
+        recipient5_.name as name5_7_5_,
+        tickettype6_.id as id1_9_6_,
+        tickettype6_.created_at as created_2_9_6_,
+        tickettype6_.description as descript3_9_6_,
+        tickettype6_.event_id as event_id8_9_6_,
+        tickettype6_.maxNumberOfPeople as maxnumbe4_9_6_,
+        tickettype6_.minimumAgeToAttend as minimuma5_9_6_,
+        tickettype6_.name as name6_9_6_,
+        tickettype6_.price as price7_9_6_,
+        event7_.id as id1_3_7_,
+        event7_.checkedInCount as checkedi2_3_7_,
+        event7_.created_at as created_3_3_7_,
+        event7_.creator_id as creator10_3_7_,
+        event7_.endTime as endtime4_3_7_,
+        event7_.location_id as locatio11_3_7_,
+        event7_.name as name5_3_7_,
+        event7_.publicDescription as publicde6_3_7_,
+        event7_.publicTagline as publicta7_3_7_,
+        event7_.purchaseCount as purchase8_3_7_,
+        event7_.startTime as starttim9_3_7_,
+        creator8_.id as id1_2_8_,
+        creator8_.created_at as created_2_2_8_,
+        creator8_.email as email3_2_8_,
+        creator8_.name as name4_2_8_,
+        creator8_.password as password5_2_8_,
+        location9_.id as id1_5_9_,
+        location9_.address as address2_5_9_,
+        location9_.city as city3_5_9_,
+        location9_.country as country4_5_9_,
+        location9_.created_at as created_5_5_9_,
+        location9_.state as state6_5_9_,
+        location9_.zipcode as zipcode7_5_9_,
+        user10_.id as id1_11_10_,
+        user10_.birthDate as birthdat2_11_10_,
+        user10_.created_at as created_3_11_10_,
+        user10_.email as email4_11_10_,
+        user10_.name as name5_11_10_,
+        user10_.password as password6_11_10_,
+        user10_.receives_emails as receives7_11_10_,
+        user10_.receives_pushs as receives8_11_10_,
+        user11_.id as id1_11_11_,
+        user11_.birthDate as birthdat2_11_11_,
+        user11_.created_at as created_3_11_11_,
+        user11_.email as email4_11_11_,
+        user11_.name as name5_11_11_,
+        user11_.password as password6_11_11_,
+        user11_.receives_emails as receives7_11_11_,
+        user11_.receives_pushs as receives8_11_11_ 
+    from
+        tickets ticket0_ 
+    inner join
+        ticket_requests ticketrequ1_ 
+            on ticket0_.ticket_request_id=ticketrequ1_.id 
+    left outer join
+        financial_information financiali2_ 
+            on ticketrequ1_.financial_information_id=financiali2_.id 
+    left outer join
+        payment_methods paymentmet3_ 
+            on financiali2_.payment_method_id=paymentmet3_.id 
+    left outer join
+        card_payments paymentmet3_1_ 
+            on paymentmet3_.id=paymentmet3_1_.id 
+    left outer join
+        checking_account_payments paymentmet3_2_ 
+            on paymentmet3_.id=paymentmet3_2_.id 
+    left outer join
+        users user4_ 
+            on financiali2_.user_id=user4_.id 
+    inner join
+        recipients recipient5_ 
+            on ticketrequ1_.recipient_id=recipient5_.id 
+    inner join
+        ticket_types tickettype6_ 
+            on ticketrequ1_.ticket_type_id=tickettype6_.id 
+    inner join
+        events event7_ 
+            on tickettype6_.event_id=event7_.id 
+    inner join
+        creators creator8_ 
+            on event7_.creator_id=creator8_.id 
+    inner join
+        locations location9_ 
+            on event7_.location_id=location9_.id 
+    inner join
+        users user10_ 
+            on ticketrequ1_.user_id=user10_.id 
+    left outer join
+        users user11_ 
+            on ticket0_.user_id=user11_.id 
+    where
+        ticket0_.id=?
+Hibernate: 
+    select
+        ticketrequ0_.id as id1_8_0_,
+        ticketrequ0_.approved as approved2_8_0_,
+        ticketrequ0_.created_at as created_3_8_0_,
+        ticketrequ0_.financial_information_id as financia4_8_0_,
+        ticketrequ0_.recipient_id as recipien5_8_0_,
+        ticketrequ0_.ticket_type_id as ticket_t6_8_0_,
+        ticketrequ0_.user_id as user_id7_8_0_,
+        financiali1_.id as id1_4_1_,
+        financiali1_.payment_method_id as payment_2_4_1_,
+        financiali1_.user_id as user_id3_4_1_,
+        paymentmet2_.id as id1_6_2_,
+        paymentmet2_1_.cardHolder as cardhold1_0_2_,
+        paymentmet2_1_.cardNumber as cardnumb2_0_2_,
+        paymentmet2_1_.cvv as cvv3_0_2_,
+        paymentmet2_1_.expirationDate as expirati4_0_2_,
+        paymentmet2_2_.accountNumber as accountn1_1_2_,
+        paymentmet2_2_.routingNumber as routingn2_1_2_,
+        case 
+            when paymentmet2_1_.id is not null then 1 
+            when paymentmet2_2_.id is not null then 2 
+            when paymentmet2_.id is not null then 0 
+        end as clazz_2_,
+        user3_.id as id1_11_3_,
+        user3_.birthDate as birthdat2_11_3_,
+        user3_.created_at as created_3_11_3_,
+        user3_.email as email4_11_3_,
+        user3_.name as name5_11_3_,
+        user3_.password as password6_11_3_,
+        user3_.receives_emails as receives7_11_3_,
+        user3_.receives_pushs as receives8_11_3_,
+        recipient4_.id as id1_7_4_,
+        recipient4_.birthDate as birthdat2_7_4_,
+        recipient4_.created_at as created_3_7_4_,
+        recipient4_.email as email4_7_4_,
+        recipient4_.name as name5_7_4_,
+        tickettype5_.id as id1_9_5_,
+        tickettype5_.created_at as created_2_9_5_,
+        tickettype5_.description as descript3_9_5_,
+        tickettype5_.event_id as event_id8_9_5_,
+        tickettype5_.maxNumberOfPeople as maxnumbe4_9_5_,
+        tickettype5_.minimumAgeToAttend as minimuma5_9_5_,
+        tickettype5_.name as name6_9_5_,
+        tickettype5_.price as price7_9_5_,
+        event6_.id as id1_3_6_,
+        event6_.checkedInCount as checkedi2_3_6_,
+        event6_.created_at as created_3_3_6_,
+        event6_.creator_id as creator10_3_6_,
+        event6_.endTime as endtime4_3_6_,
+        event6_.location_id as locatio11_3_6_,
+        event6_.name as name5_3_6_,
+        event6_.publicDescription as publicde6_3_6_,
+        event6_.publicTagline as publicta7_3_6_,
+        event6_.purchaseCount as purchase8_3_6_,
+        event6_.startTime as starttim9_3_6_,
+        creator7_.id as id1_2_7_,
+        creator7_.created_at as created_2_2_7_,
+        creator7_.email as email3_2_7_,
+        creator7_.name as name4_2_7_,
+        creator7_.password as password5_2_7_,
+        location8_.id as id1_5_8_,
+        location8_.address as address2_5_8_,
+        location8_.city as city3_5_8_,
+        location8_.country as country4_5_8_,
+        location8_.created_at as created_5_5_8_,
+        location8_.state as state6_5_8_,
+        location8_.zipcode as zipcode7_5_8_,
+        user9_.id as id1_11_9_,
+        user9_.birthDate as birthdat2_11_9_,
+        user9_.created_at as created_3_11_9_,
+        user9_.email as email4_11_9_,
+        user9_.name as name5_11_9_,
+        user9_.password as password6_11_9_,
+        user9_.receives_emails as receives7_11_9_,
+        user9_.receives_pushs as receives8_11_9_ 
+    from
+        ticket_requests ticketrequ0_ 
+    left outer join
+        financial_information financiali1_ 
+            on ticketrequ0_.financial_information_id=financiali1_.id 
+    left outer join
+        payment_methods paymentmet2_ 
+            on financiali1_.payment_method_id=paymentmet2_.id 
+    left outer join
+        card_payments paymentmet2_1_ 
+            on paymentmet2_.id=paymentmet2_1_.id 
+    left outer join
+        checking_account_payments paymentmet2_2_ 
+            on paymentmet2_.id=paymentmet2_2_.id 
+    left outer join
+        users user3_ 
+            on financiali1_.user_id=user3_.id 
+    inner join
+        recipients recipient4_ 
+            on ticketrequ0_.recipient_id=recipient4_.id 
+    inner join
+        ticket_types tickettype5_ 
+            on ticketrequ0_.ticket_type_id=tickettype5_.id 
+    inner join
+        events event6_ 
+            on tickettype5_.event_id=event6_.id 
+    inner join
+        creators creator7_ 
+            on event6_.creator_id=creator7_.id 
+    inner join
+        locations location8_ 
+            on event6_.location_id=location8_.id 
+    inner join
+        users user9_ 
+            on ticketrequ0_.user_id=user9_.id 
+    where
+        ticketrequ0_.id=?
+Hibernate: 
+    delete 
+    from
+        ticket_requests 
+    where
+        id=?
+Hibernate: 
+    select
+        financiali0_.user_id as user_id3_4_0_,
+        financiali0_.id as id1_4_0_,
+        financiali0_.id as id1_4_1_,
+        financiali0_.payment_method_id as payment_2_4_1_,
+        financiali0_.user_id as user_id3_4_1_,
+        paymentmet1_.id as id1_6_2_,
+        paymentmet1_1_.cardHolder as cardhold1_0_2_,
+        paymentmet1_1_.cardNumber as cardnumb2_0_2_,
+        paymentmet1_1_.cvv as cvv3_0_2_,
+        paymentmet1_1_.expirationDate as expirati4_0_2_,
+        paymentmet1_2_.accountNumber as accountn1_1_2_,
+        paymentmet1_2_.routingNumber as routingn2_1_2_,
+        case 
+            when paymentmet1_1_.id is not null then 1 
+            when paymentmet1_2_.id is not null then 2 
+            when paymentmet1_.id is not null then 0 
+        end as clazz_2_ 
+    from
+        financial_information financiali0_ 
+    left outer join
+        payment_methods paymentmet1_ 
+            on financiali0_.payment_method_id=paymentmet1_.id 
+    left outer join
+        card_payments paymentmet1_1_ 
+            on paymentmet1_.id=paymentmet1_1_.id 
+    left outer join
+        checking_account_payments paymentmet1_2_ 
+            on paymentmet1_.id=paymentmet1_2_.id 
+    where
+        financiali0_.user_id=?
+Hibernate: 
+    select
+        ticketrequ0_.user_id as user_id7_8_0_,
+        ticketrequ0_.id as id1_8_0_,
+        ticketrequ0_.id as id1_8_1_,
+        ticketrequ0_.approved as approved2_8_1_,
+        ticketrequ0_.created_at as created_3_8_1_,
+        ticketrequ0_.financial_information_id as financia4_8_1_,
+        ticketrequ0_.recipient_id as recipien5_8_1_,
+        ticketrequ0_.ticket_type_id as ticket_t6_8_1_,
+        ticketrequ0_.user_id as user_id7_8_1_,
+        financiali1_.id as id1_4_2_,
+        financiali1_.payment_method_id as payment_2_4_2_,
+        financiali1_.user_id as user_id3_4_2_,
+        paymentmet2_.id as id1_6_3_,
+        paymentmet2_1_.cardHolder as cardhold1_0_3_,
+        paymentmet2_1_.cardNumber as cardnumb2_0_3_,
+        paymentmet2_1_.cvv as cvv3_0_3_,
+        paymentmet2_1_.expirationDate as expirati4_0_3_,
+        paymentmet2_2_.accountNumber as accountn1_1_3_,
+        paymentmet2_2_.routingNumber as routingn2_1_3_,
+        case 
+            when paymentmet2_1_.id is not null then 1 
+            when paymentmet2_2_.id is not null then 2 
+            when paymentmet2_.id is not null then 0 
+        end as clazz_3_,
+        user3_.id as id1_11_4_,
+        user3_.birthDate as birthdat2_11_4_,
+        user3_.created_at as created_3_11_4_,
+        user3_.email as email4_11_4_,
+        user3_.name as name5_11_4_,
+        user3_.password as password6_11_4_,
+        user3_.receives_emails as receives7_11_4_,
+        user3_.receives_pushs as receives8_11_4_,
+        recipient4_.id as id1_7_5_,
+        recipient4_.birthDate as birthdat2_7_5_,
+        recipient4_.created_at as created_3_7_5_,
+        recipient4_.email as email4_7_5_,
+        recipient4_.name as name5_7_5_,
+        tickettype5_.id as id1_9_6_,
+        tickettype5_.created_at as created_2_9_6_,
+        tickettype5_.description as descript3_9_6_,
+        tickettype5_.event_id as event_id8_9_6_,
+        tickettype5_.maxNumberOfPeople as maxnumbe4_9_6_,
+        tickettype5_.minimumAgeToAttend as minimuma5_9_6_,
+        tickettype5_.name as name6_9_6_,
+        tickettype5_.price as price7_9_6_,
+        event6_.id as id1_3_7_,
+        event6_.checkedInCount as checkedi2_3_7_,
+        event6_.created_at as created_3_3_7_,
+        event6_.creator_id as creator10_3_7_,
+        event6_.endTime as endtime4_3_7_,
+        event6_.location_id as locatio11_3_7_,
+        event6_.name as name5_3_7_,
+        event6_.publicDescription as publicde6_3_7_,
+        event6_.publicTagline as publicta7_3_7_,
+        event6_.purchaseCount as purchase8_3_7_,
+        event6_.startTime as starttim9_3_7_,
+        creator7_.id as id1_2_8_,
+        creator7_.created_at as created_2_2_8_,
+        creator7_.email as email3_2_8_,
+        creator7_.name as name4_2_8_,
+        creator7_.password as password5_2_8_,
+        location8_.id as id1_5_9_,
+        location8_.address as address2_5_9_,
+        location8_.city as city3_5_9_,
+        location8_.country as country4_5_9_,
+        location8_.created_at as created_5_5_9_,
+        location8_.state as state6_5_9_,
+        location8_.zipcode as zipcode7_5_9_ 
+    from
+        ticket_requests ticketrequ0_ 
+    left outer join
+        financial_information financiali1_ 
+            on ticketrequ0_.financial_information_id=financiali1_.id 
+    left outer join
+        payment_methods paymentmet2_ 
+            on financiali1_.payment_method_id=paymentmet2_.id 
+    left outer join
+        card_payments paymentmet2_1_ 
+            on paymentmet2_.id=paymentmet2_1_.id 
+    left outer join
+        checking_account_payments paymentmet2_2_ 
+            on paymentmet2_.id=paymentmet2_2_.id 
+    left outer join
+        users user3_ 
+            on financiali1_.user_id=user3_.id 
+    inner join
+        recipients recipient4_ 
+            on ticketrequ0_.recipient_id=recipient4_.id 
+    inner join
+        ticket_types tickettype5_ 
+            on ticketrequ0_.ticket_type_id=tickettype5_.id 
+    inner join
+        events event6_ 
+            on tickettype5_.event_id=event6_.id 
+    inner join
+        creators creator7_ 
+            on event6_.creator_id=creator7_.id 
+    inner join
+        locations location8_ 
+            on event6_.location_id=location8_.id 
+    where
+        ticketrequ0_.user_id=?
+Hibernate: 
+    select
+        tickets0_.user_id as user_id5_10_0_,
+        tickets0_.id as id1_10_0_,
+        tickets0_.id as id1_10_1_,
+        tickets0_.checkedIn as checkedi2_10_1_,
+        tickets0_.created_at as created_3_10_1_,
+        tickets0_.ticket_request_id as ticket_r4_10_1_,
+        tickets0_.user_id as user_id5_10_1_,
+        ticketrequ1_.id as id1_8_2_,
+        ticketrequ1_.approved as approved2_8_2_,
+        ticketrequ1_.created_at as created_3_8_2_,
+        ticketrequ1_.financial_information_id as financia4_8_2_,
+        ticketrequ1_.recipient_id as recipien5_8_2_,
+        ticketrequ1_.ticket_type_id as ticket_t6_8_2_,
+        ticketrequ1_.user_id as user_id7_8_2_,
+        financiali2_.id as id1_4_3_,
+        financiali2_.payment_method_id as payment_2_4_3_,
+        financiali2_.user_id as user_id3_4_3_,
+        paymentmet3_.id as id1_6_4_,
+        paymentmet3_1_.cardHolder as cardhold1_0_4_,
+        paymentmet3_1_.cardNumber as cardnumb2_0_4_,
+        paymentmet3_1_.cvv as cvv3_0_4_,
+        paymentmet3_1_.expirationDate as expirati4_0_4_,
+        paymentmet3_2_.accountNumber as accountn1_1_4_,
+        paymentmet3_2_.routingNumber as routingn2_1_4_,
+        case 
+            when paymentmet3_1_.id is not null then 1 
+            when paymentmet3_2_.id is not null then 2 
+            when paymentmet3_.id is not null then 0 
+        end as clazz_4_,
+        user4_.id as id1_11_5_,
+        user4_.birthDate as birthdat2_11_5_,
+        user4_.created_at as created_3_11_5_,
+        user4_.email as email4_11_5_,
+        user4_.name as name5_11_5_,
+        user4_.password as password6_11_5_,
+        user4_.receives_emails as receives7_11_5_,
+        user4_.receives_pushs as receives8_11_5_,
+        recipient5_.id as id1_7_6_,
+        recipient5_.birthDate as birthdat2_7_6_,
+        recipient5_.created_at as created_3_7_6_,
+        recipient5_.email as email4_7_6_,
+        recipient5_.name as name5_7_6_,
+        tickettype6_.id as id1_9_7_,
+        tickettype6_.created_at as created_2_9_7_,
+        tickettype6_.description as descript3_9_7_,
+        tickettype6_.event_id as event_id8_9_7_,
+        tickettype6_.maxNumberOfPeople as maxnumbe4_9_7_,
+        tickettype6_.minimumAgeToAttend as minimuma5_9_7_,
+        tickettype6_.name as name6_9_7_,
+        tickettype6_.price as price7_9_7_,
+        event7_.id as id1_3_8_,
+        event7_.checkedInCount as checkedi2_3_8_,
+        event7_.created_at as created_3_3_8_,
+        event7_.creator_id as creator10_3_8_,
+        event7_.endTime as endtime4_3_8_,
+        event7_.location_id as locatio11_3_8_,
+        event7_.name as name5_3_8_,
+        event7_.publicDescription as publicde6_3_8_,
+        event7_.publicTagline as publicta7_3_8_,
+        event7_.purchaseCount as purchase8_3_8_,
+        event7_.startTime as starttim9_3_8_,
+        creator8_.id as id1_2_9_,
+        creator8_.created_at as created_2_2_9_,
+        creator8_.email as email3_2_9_,
+        creator8_.name as name4_2_9_,
+        creator8_.password as password5_2_9_,
+        location9_.id as id1_5_10_,
+        location9_.address as address2_5_10_,
+        location9_.city as city3_5_10_,
+        location9_.country as country4_5_10_,
+        location9_.created_at as created_5_5_10_,
+        location9_.state as state6_5_10_,
+        location9_.zipcode as zipcode7_5_10_,
+        user10_.id as id1_11_11_,
+        user10_.birthDate as birthdat2_11_11_,
+        user10_.created_at as created_3_11_11_,
+        user10_.email as email4_11_11_,
+        user10_.name as name5_11_11_,
+        user10_.password as password6_11_11_,
+        user10_.receives_emails as receives7_11_11_,
+        user10_.receives_pushs as receives8_11_11_ 
+    from
+        tickets tickets0_ 
+    inner join
+        ticket_requests ticketrequ1_ 
+            on tickets0_.ticket_request_id=ticketrequ1_.id 
+    left outer join
+        financial_information financiali2_ 
+            on ticketrequ1_.financial_information_id=financiali2_.id 
+    left outer join
+        payment_methods paymentmet3_ 
+            on financiali2_.payment_method_id=paymentmet3_.id 
+    left outer join
+        card_payments paymentmet3_1_ 
+            on paymentmet3_.id=paymentmet3_1_.id 
+    left outer join
+        checking_account_payments paymentmet3_2_ 
+            on paymentmet3_.id=paymentmet3_2_.id 
+    left outer join
+        users user4_ 
+            on financiali2_.user_id=user4_.id 
+    inner join
+        recipients recipient5_ 
+            on ticketrequ1_.recipient_id=recipient5_.id 
+    inner join
+        ticket_types tickettype6_ 
+            on ticketrequ1_.ticket_type_id=tickettype6_.id 
+    inner join
+        events event7_ 
+            on tickettype6_.event_id=event7_.id 
+    inner join
+        creators creator8_ 
+            on event7_.creator_id=creator8_.id 
+    inner join
+        locations location9_ 
+            on event7_.location_id=location9_.id 
+    inner join
+        users user10_ 
+            on ticketrequ1_.user_id=user10_.id 
+    where
+        tickets0_.user_id=?
+Hibernate: 
+    update
+        financial_information 
+    set
+        payment_method_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        card_payments 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        payment_methods 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        financial_information 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        users 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        ticket_types 
+    where
+        id=?
+Hibernate: 
+    select
+        tickettype0_.event_id as event_id8_9_0_,
+        tickettype0_.id as id1_9_0_,
+        tickettype0_.id as id1_9_1_,
+        tickettype0_.created_at as created_2_9_1_,
+        tickettype0_.description as descript3_9_1_,
+        tickettype0_.event_id as event_id8_9_1_,
+        tickettype0_.maxNumberOfPeople as maxnumbe4_9_1_,
+        tickettype0_.minimumAgeToAttend as minimuma5_9_1_,
+        tickettype0_.name as name6_9_1_,
+        tickettype0_.price as price7_9_1_ 
+    from
+        ticket_types tickettype0_ 
+    where
+        tickettype0_.event_id=?
+Hibernate: 
+    delete 
+    from
+        events 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        locations 
+    where
+        id=?
+Hibernate: 
+    select
+        eventscrea0_.creator_id as creator10_3_0_,
+        eventscrea0_.id as id1_3_0_,
+        eventscrea0_.id as id1_3_1_,
+        eventscrea0_.checkedInCount as checkedi2_3_1_,
+        eventscrea0_.created_at as created_3_3_1_,
+        eventscrea0_.creator_id as creator10_3_1_,
+        eventscrea0_.endTime as endtime4_3_1_,
+        eventscrea0_.location_id as locatio11_3_1_,
+        eventscrea0_.name as name5_3_1_,
+        eventscrea0_.publicDescription as publicde6_3_1_,
+        eventscrea0_.publicTagline as publicta7_3_1_,
+        eventscrea0_.purchaseCount as purchase8_3_1_,
+        eventscrea0_.startTime as starttim9_3_1_,
+        location1_.id as id1_5_2_,
+        location1_.address as address2_5_2_,
+        location1_.city as city3_5_2_,
+        location1_.country as country4_5_2_,
+        location1_.created_at as created_5_5_2_,
+        location1_.state as state6_5_2_,
+        location1_.zipcode as zipcode7_5_2_ 
+    from
+        events eventscrea0_ 
+    inner join
+        locations location1_ 
+            on eventscrea0_.location_id=location1_.id 
+    where
+        eventscrea0_.creator_id=?
+Hibernate: 
+    delete 
+    from
+        creators 
+    where
+        id=?
+Hibernate: 
+    select
+        location0_.id as id1_5_0_,
+        location0_.address as address2_5_0_,
+        location0_.city as city3_5_0_,
+        location0_.country as country4_5_0_,
+        location0_.created_at as created_5_5_0_,
+        location0_.state as state6_5_0_,
+        location0_.zipcode as zipcode7_5_0_ 
+    from
+        locations location0_ 
+    where
+        location0_.id=?
+]]></system-out>
+    <system-err><![CDATA[May 20, 2024 6:06:04 PM org.hibernate.jpa.internal.util.LogHelper logPersistenceUnitInformation
+INFO: HHH000204: Processing PersistenceUnitInfo [name: EventMarketPU-Test]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {password=****, user=fernandorochacorreaurbano}
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+May 20, 2024 6:06:04 PM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+May 20, 2024 6:06:04 PM org.hibernate.cfg.AnnotationBinder bindClass
+WARN: HHH000499: Using @AttributeOverride or @AttributeOverrides in conjunction with entity inheritance is not supported: eventmarket.main.CheckingAccountPayment. The overriding definitions are ignored.
+May 20, 2024 6:06:04 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6d7005e2] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:04 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@33a39d7e] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:04 PM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PoolState stop
+INFO: HHH10001008: Cleaning up connection pool [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+]]></system-err>
+  </testcase>
+  <testcase name="testTicketCreation" classname="eventmarket.main.TicketTest" time="0.259">
+    <system-out><![CDATA[Hibernate: 
+    
+    alter table card_payments 
+       drop constraint FKic7mb0ymisnucpq72pu7dcvcv
+Hibernate: 
+    
+    alter table checking_account_payments 
+       drop constraint FK6gj23lu9s32y52yy7xd4tgaf6
+Hibernate: 
+    
+    alter table events 
+       drop constraint FKjps29529ev7c8eivb26m69f2u
+Hibernate: 
+    
+    alter table events 
+       drop constraint FK7a9tiyl3gaugxrtjc2m97awui
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FK7p5g57g99opt9414b98lw9630
+Hibernate: 
+    
+    alter table financial_information 
+       drop constraint FKo7ei496g72xfjbiyh5db863xi
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKoc13f9ha83d51mle3juj95n6u
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK8p9gn9u4arhs1m0h8d1d38bfp
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FK6fjy9aonbpsxsk5cso9oovtqf
+Hibernate: 
+    
+    alter table ticket_requests 
+       drop constraint FKohueelmdfs1uf7y0fgv4uscy
+Hibernate: 
+    
+    alter table ticket_types 
+       drop constraint FKl83j9knh8jrssp3skaeubrrk
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK7gr4g6bxns8i848sxyy5ly47g
+Hibernate: 
+    
+    alter table tickets 
+       drop constraint FK4eqsebpimnjen0q46ja6fl2hl
+Hibernate: 
+    
+    drop table if exists card_payments cascade
+Hibernate: 
+    
+    drop table if exists checking_account_payments cascade
+Hibernate: 
+    
+    drop table if exists creators cascade
+Hibernate: 
+    
+    drop table if exists events cascade
+Hibernate: 
+    
+    drop table if exists financial_information cascade
+Hibernate: 
+    
+    drop table if exists locations cascade
+Hibernate: 
+    
+    drop table if exists payment_methods cascade
+Hibernate: 
+    
+    drop table if exists recipients cascade
+Hibernate: 
+    
+    drop table if exists ticket_requests cascade
+Hibernate: 
+    
+    drop table if exists ticket_types cascade
+Hibernate: 
+    
+    drop table if exists tickets cascade
+Hibernate: 
+    
+    drop table if exists users cascade
+Hibernate: 
+    
+    create table card_payments (
+       cardHolder varchar(255) not null,
+        cardNumber varchar(255) not null,
+        cvv varchar(255) not null,
+        expirationDate date not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table checking_account_payments (
+       accountNumber varchar(255) not null,
+        routingNumber varchar(255) not null,
+        id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table creators (
+       id  serial not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table events (
+       id  serial not null,
+        checkedInCount int4 not null,
+        created_at timestamp not null,
+        endTime timestamp not null,
+        name varchar(255) not null,
+        publicDescription varchar(255) not null,
+        publicTagline varchar(255) not null,
+        purchaseCount int4 not null,
+        startTime timestamp not null,
+        creator_id int4 not null,
+        location_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table financial_information (
+       id  serial not null,
+        payment_method_id int4,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table locations (
+       id  serial not null,
+        address varchar(255) not null,
+        city varchar(255) not null,
+        country varchar(255) not null,
+        created_at timestamp not null,
+        state varchar(255) not null,
+        zipcode varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table payment_methods (
+       id  serial not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table recipients (
+       id  serial not null,
+        birthDate date not null,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_requests (
+       id  serial not null,
+        approved boolean not null,
+        created_at timestamp not null,
+        financial_information_id int4,
+        recipient_id int4 not null,
+        ticket_type_id int4 not null,
+        user_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table ticket_types (
+       id  serial not null,
+        created_at timestamp not null,
+        description varchar(255) not null,
+        maxNumberOfPeople int4 not null,
+        minimumAgeToAttend int4 not null,
+        name varchar(255) not null,
+        price float8 not null,
+        event_id int4 not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table tickets (
+       id  serial not null,
+        checkedIn boolean not null,
+        created_at timestamp not null,
+        ticket_request_id int4 not null,
+        user_id int4,
+        primary key (id)
+    )
+Hibernate: 
+    
+    create table users (
+       id  serial not null,
+        birthDate date,
+        created_at timestamp not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        password varchar(255) not null,
+        receives_emails boolean not null,
+        receives_pushs boolean not null,
+        primary key (id)
+    )
+Hibernate: 
+    
+    alter table creators 
+       add constraint UK_ctcc11eiqhscs3nex9hpniri3 unique (email)
+Hibernate: 
+    
+    alter table recipients 
+       add constraint UK_6gpos5vs0ldsagne4t1vw2222 unique (email)
+Hibernate: 
+    
+    alter table users 
+       add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: 
+    
+    alter table card_payments 
+       add constraint FKic7mb0ymisnucpq72pu7dcvcv 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table checking_account_payments 
+       add constraint FK6gj23lu9s32y52yy7xd4tgaf6 
+       foreign key (id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table events 
+       add constraint FKjps29529ev7c8eivb26m69f2u 
+       foreign key (creator_id) 
+       references creators
+Hibernate: 
+    
+    alter table events 
+       add constraint FK7a9tiyl3gaugxrtjc2m97awui 
+       foreign key (location_id) 
+       references locations
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FK7p5g57g99opt9414b98lw9630 
+       foreign key (payment_method_id) 
+       references payment_methods
+Hibernate: 
+    
+    alter table financial_information 
+       add constraint FKo7ei496g72xfjbiyh5db863xi 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKoc13f9ha83d51mle3juj95n6u 
+       foreign key (financial_information_id) 
+       references financial_information
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK8p9gn9u4arhs1m0h8d1d38bfp 
+       foreign key (recipient_id) 
+       references recipients
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FK6fjy9aonbpsxsk5cso9oovtqf 
+       foreign key (ticket_type_id) 
+       references ticket_types
+Hibernate: 
+    
+    alter table ticket_requests 
+       add constraint FKohueelmdfs1uf7y0fgv4uscy 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    
+    alter table ticket_types 
+       add constraint FKl83j9knh8jrssp3skaeubrrk 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK7gr4g6bxns8i848sxyy5ly47g 
+       foreign key (ticket_request_id) 
+       references ticket_requests
+Hibernate: 
+    
+    alter table tickets 
+       add constraint FK4eqsebpimnjen0q46ja6fl2hl 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    insert 
+    into
+        locations
+        (address, city, country, created_at, state, zipcode) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        creators
+        (created_at, email, name, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        events
+        (checkedInCount, created_at, creator_id, endTime, location_id, name, publicDescription, publicTagline, purchaseCount, startTime) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_types
+        (created_at, description, event_id, maxNumberOfPeople, minimumAgeToAttend, name, price) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (birthDate, created_at, email, name, password, receives_emails, receives_pushs) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        recipients
+        (birthDate, created_at, email, name) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        payment_methods
+        default 
+    values
+        
+Hibernate: 
+    insert 
+    into
+        card_payments
+        (cardHolder, cardNumber, cvv, expirationDate, id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        financial_information
+        (payment_method_id, user_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        ticket_requests
+        (approved, created_at, financial_information_id, recipient_id, ticket_type_id, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        tickets
+        (checkedIn, created_at, ticket_request_id, user_id) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    update
+        ticket_requests 
+    set
+        approved=?,
+        financial_information_id=?,
+        recipient_id=?,
+        ticket_type_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        tickets 
+    where
+        id=?
+Hibernate: 
+    update
+        financial_information 
+    set
+        payment_method_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        ticket_requests 
+    set
+        approved=?,
+        financial_information_id=?,
+        recipient_id=?,
+        ticket_type_id=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        card_payments 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        payment_methods 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        financial_information 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        ticket_requests 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        users 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        ticket_types 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        events 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        locations 
+    where
+        id=?
+Hibernate: 
+    delete 
+    from
+        creators 
+    where
+        id=?
+Hibernate: 
+    select
+        location0_.id as id1_5_0_,
+        location0_.address as address2_5_0_,
+        location0_.city as city3_5_0_,
+        location0_.country as country4_5_0_,
+        location0_.created_at as created_5_5_0_,
+        location0_.state as state6_5_0_,
+        location0_.zipcode as zipcode7_5_0_ 
+    from
+        locations location0_ 
+    where
+        location0_.id=?
+]]></system-out>
+    <system-err><![CDATA[May 20, 2024 6:06:04 PM org.hibernate.jpa.internal.util.LogHelper logPersistenceUnitInformation
+INFO: HHH000204: Processing PersistenceUnitInfo [name: EventMarketPU-Test]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {password=****, user=fernandorochacorreaurbano}
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+May 20, 2024 6:06:04 PM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+May 20, 2024 6:06:04 PM org.hibernate.cfg.AnnotationBinder bindClass
+WARN: HHH000499: Using @AttributeOverride or @AttributeOverrides in conjunction with entity inheritance is not supported: eventmarket.main.CheckingAccountPayment. The overriding definitions are ignored.
+May 20, 2024 6:06:04 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@4c219c84] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:04 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@2b01be54] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+May 20, 2024 6:06:04 PM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+May 20, 2024 6:06:04 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PoolState stop
+INFO: HHH10001008: Cleaning up connection pool [jdbc:postgresql://localhost:5432/eventmarket_test_db]
+]]></system-err>
+  </testcase>
+</testsuite>

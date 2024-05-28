@@ -1,0 +1,13 @@
+@startuml Recipient
+class Recipient {
+    - id : int
+    - name : String
+    - email : String
+    - createdAt : Date
+    - birthDate : Date
+    + Recipient(name : String, email : String, birthDate : Date)
+    + Recipient(user : User)
+    + display() : String
+    + getAge() : int
+}
+@enduml

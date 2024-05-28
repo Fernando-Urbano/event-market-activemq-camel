@@ -1,0 +1,15 @@
+@startuml TicketTypeIterator
+!include AbstractIterator.puml
+class TicketTypeIterator extends AbstractIterator {
+    - event : Event
+    - currentIndex : int
+    - ticketTypes : List<TicketType>
+    + TicketTypeIterator(event : Event)
+    + next() : TicketType
+    + getSteps() : int
+    + setSteps(step : int) : void
+    + isDone() : boolean
+    + current() : TicketType
+    + first() : TicketType
+}
+@enduml

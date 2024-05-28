@@ -1,0 +1,13 @@
+@startuml Ticket
+class Ticket {
+    - id : int
+    - ticketRequest : TicketRequest
+    - user : User
+    - checkedIn : boolean
+    - createdAt : Date
+    + Ticket(ticketRequest : TicketRequest)
+    + display() : String
+    + setUser(user : User) : void
+    + getUser() : User
+}
+@enduml

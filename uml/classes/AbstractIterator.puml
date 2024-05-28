@@ -1,0 +1,10 @@
+@startuml AbstractIterator
+class AbstractIterator <T> {
+    + abstract next() : T
+    + abstract getSteps() : int
+    + abstract setSteps(step : int)
+    + abstract isDone() : boolean
+    + abstract current() : T
+    + abstract first() : T
+}
+@enduml

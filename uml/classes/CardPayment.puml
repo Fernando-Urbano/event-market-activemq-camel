@@ -1,0 +1,12 @@
+@startuml CardPayment
+!include PaymentMethod.puml
+
+class CardPayment extends PaymentMethod {
+    - cardNumber : String
+    - cardHolder : String
+    - expirationDate : Date
+    - cvv : String
+    + CardPayment(cardNumber : String, cardHolder : String, expirationDate : Date, cvv : String)
+    + display() : String
+}
+@enduml

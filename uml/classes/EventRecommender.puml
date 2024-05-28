@@ -1,0 +1,14 @@
+@startuml EventRecommender
+class EventRecommender {
+    - id : int
+    - user : User
+    - model : AbstractRecommenderModel
+    - numberRecommendations : int
+    - eventRecommendations : List<Event>
+    + EventRecommender(model : AbstractRecommenderModel)
+    + sendRecommendation() : List<Event>
+    + requestRecommendation() : void
+    + setNumberRecommendations(numberRecommendations : int) : void
+    + getNumberRecommendations() : int
+}
+@enduml

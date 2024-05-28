@@ -1,0 +1,16 @@
+@startuml TicketRequest
+class TicketRequest {
+    - id : int
+    - ticketType : TicketType
+    - user : User
+    - recipient : Recipient
+    - financialInformation : FinancialInformation
+    - approved : boolean
+    - createdAt : Date
+    + TicketRequest()
+    + TicketRequest(recipient : Recipient, financialInformation : FinancialInformation, ticketType : TicketType)
+    + display() : String
+    + transformToTicket() : Ticket
+    + approveRequest() : void
+}
+@enduml

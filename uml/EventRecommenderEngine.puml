@@ -1,0 +1,18 @@
+@startuml EventRecommenderEngine
+title Event Recommender Engine
+!include classes/User.puml
+!include classes/EventRecommender.puml
+!include classes/AbstractRecommenderModel.puml
+!include classes/NlpRecommenderModel.puml
+!include classes/PopularityRecommenderModel.puml
+
+User ..> EventRecommender : uses
+
+' EventRecommender acts as a Facade, simplifying the recommendation process
+note right of EventRecommender
+  Facade pattern: simplifies complex
+  recommendation processes
+end note
+EventRecommender *-- AbstractRecommenderModel : uses models
+
+@enduml

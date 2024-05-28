@@ -1,0 +1,14 @@
+@startuml Creator
+class Creator {
+    - id : int
+    - name : String
+    - email : String
+    - password : String
+    - createdAt : Date
+    - eventsCreated : List<Event>
+    + Creator(name : String, email : String, password : String)
+    + display() : String
+    + addEvent(event : Event) : void
+    + removeEvent(event : Event) : void
+}
+@enduml

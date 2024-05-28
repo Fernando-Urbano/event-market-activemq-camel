@@ -1,0 +1,17 @@
+@startuml EventCreation
+title Event Creation
+!include classes/Creator.puml
+!include classes/Event.puml
+!include classes/TicketType.puml
+!include classes/Location.puml
+
+' Aggregation between Creator and Event
+Creator o-- "0..*" Event : creates
+
+' Composition between Event and TicketType
+Event "1" *-- "1..*" TicketType : contains
+
+' Composition between Event and Location
+Event *-- "1" Location : contains
+
+@enduml

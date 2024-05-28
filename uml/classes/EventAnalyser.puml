@@ -1,0 +1,13 @@
+@startuml EventAnalyser
+class EventAnalyser {
+    - event : Event
+    + EventAnalyser(event : Event)
+    + calcPurchaseOverTime(period : String, startDate : Date, endDate : Date) : Hash<Date, int>
+    + calcAgeDistribution() : Hash<String, int>
+    + calcAvgAge() : double
+    + calcGenderDistribution() : Hash<String, int>
+    + calcAvgPrice() : double
+    + calcAvgPurchasePerUser() : double
+    + calcSellPriceDistribution() : Hash<double, int>
+}
+@enduml

@@ -1,0 +1,1981 @@
+Classes of the event-market project:
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/TicketTypeIterator.java
+
+package eventmarket.main;
+
+import java.util.List;
+
+public class TicketTypeIterator extends AbstractIterator<TicketType> {
+    private Event event;
+    private int currentIndex;
+    private List<TicketType> ticketTypes;
+
+    public TicketTypeIterator(Event event) {
+        this.event = event;
+        this.ticketTypes = event.getTicketTypes();
+        this.currentIndex = 0;
+    }
+
+    @Override
+    public TicketType next() {
+        if (isDone()) {
+            throw new IllegalStateException("No more ticket types");
+        }
+        TicketType ticketType = ticketTypes.get(currentIndex);
+        currentIndex++;
+        return ticketType;
+    }
+
+    @Override
+    public int getSteps() {
+        return currentIndex;
+    }
+
+    @Override
+    public void setSteps(int step) {
+        if (step < 0 || step >= ticketTypes.size()) {
+            throw new IllegalArgumentException("Invalid step value");
+        }
+        this.currentIndex = step;
+    }
+
+    @Override
+    public boolean isDone() {
+        return currentIndex >= ticketTypes.size();
+    }
+
+    @Override
+    public TicketType current() {
+        if (isDone()) {
+            throw new IllegalStateException("No more elements");
+        }
+        return ticketTypes.get(currentIndex);
+    }
+
+    @Override
+    public TicketType first() {
+        currentIndex = 0;
+        return ticketTypes.get(currentIndex);
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/TicketRequest.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Date;
+
+@Entity
+@Table(name = "ticket_requests")
+public class TicketRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "ticket_type_id", nullable = false)
+    private TicketType ticketType;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "recipient_id", nullable = false)
+    private Recipient recipient;
+
+    @OneToOne
+    @JoinColumn(name = "financial_information_id", nullable = true)
+    private FinancialInformation financialInformation;
+
+    @Column(nullable = false)
+    private boolean approved;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    public TicketRequest() {
+    }
+
+    public TicketRequest(Recipient recipient, FinancialInformation financialInformation, TicketType ticketType) {
+        this.recipient = recipient;
+        this.financialInformation = financialInformation;
+        this.ticketType = ticketType;
+        this.approved = false;
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        // Ensure the user's ticketRequests collection includes this TicketRequest
+        if (!user.getTicketRequests().contains(this)) {
+            user.getTicketRequests().add(this);
+        }
+    }
+
+    public Recipient getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(Recipient recipient) {
+        this.recipient = recipient;
+    }
+
+    public FinancialInformation getFinancialInformation() {
+        return financialInformation;
+    }
+
+    public void setFinancialInformation(FinancialInformation financialInformation) {
+        this.financialInformation = financialInformation;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("TicketRequest: %d, Approved: %s", id, approved ? "Yes" : "No");
+    }
+
+    public Ticket transformToTicket() {
+        if (approved) {
+            return new Ticket(this);
+        }
+        return null;
+    }
+
+    public void approveRequest() {
+        this.approved = true;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/FinancialValidator.java
+
+package eventmarket.main;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FinancialValidator {
+    private static FinancialValidator instance;
+    private List<Integer> recentlyCheckedRequestIds;
+
+    private FinancialValidator() {
+        recentlyCheckedRequestIds = new ArrayList<>();
+    }
+
+    public static FinancialValidator getInstance() {
+        if (instance == null) {
+            instance = new FinancialValidator();
+        }
+        return instance;
+    }
+
+    public boolean requestValidation(TicketRequest ticketRequest) {
+        if (isRecentlyChecked(ticketRequest.getId())) {
+            return false;
+        }
+        addRecentlyCheckedRequestId(ticketRequest.getId());
+        return true;
+    }
+
+    public void addRecentlyCheckedRequestId(int ticketRequestId) {
+        recentlyCheckedRequestIds.add(ticketRequestId);
+    }
+
+    public boolean isRecentlyChecked(int ticketRequestId) {
+        return recentlyCheckedRequestIds.contains(ticketRequestId);
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/PopularityRecommenderModel.java
+
+package eventmarket.main;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class PopularityRecommenderModel extends AbstractRecommenderModel {
+
+    private User user;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public PopularityRecommenderModel(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public List<Event> recommend(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Invalid value for n");
+        }
+        return findEventsBasedOnPopularityAnalysis(n);
+    }
+
+    @Override public List<Event> recommend() {
+        return findEventsBasedOnPopularityAnalysis(3);
+    }
+
+    private List<Event> findEventsBasedOnPopularityAnalysis(int n) {
+        List<Event> allEvents = fetchAllEvents();
+        List<Event> userEvents = fetchUserEvents();
+
+        allEvents.removeAll(userEvents);
+        return selectRandomEvents(allEvents, n);
+    }
+
+    private List<Event> fetchAllEvents() {
+        return entityManager.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+    }
+
+    private List<Event> fetchUserEvents() {
+        List<Event> userEvents = new ArrayList<>();
+
+        List<Ticket> userTickets = entityManager.createQuery(
+                "SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class)
+                .setParameter("user", user)
+                .getResultList();
+        for (Ticket ticket : userTickets) {
+            userEvents.add(ticket.getTicketRequest().getTicketType().getEvent());
+        }
+
+        List<TicketRequest> userTicketRequests = entityManager.createQuery(
+                "SELECT tr FROM TicketRequest tr WHERE tr.user = :user", TicketRequest.class)
+                .setParameter("user", user)
+                .getResultList();
+        for (TicketRequest ticketRequest : userTicketRequests) {
+            userEvents.add(ticketRequest.getTicketType().getEvent());
+        }
+
+        return userEvents;
+    }
+
+    private List<Event> selectRandomEvents(List<Event> events, int count) {
+        Random rand = new Random();
+        List<Event> selectedEvents = new ArrayList<>();
+        for (int i = 0; i < count && !events.isEmpty(); i++) {
+            int randomIndex = rand.nextInt(events.size());
+            selectedEvents.add(events.remove(randomIndex));
+        }
+        return selectedEvents;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/TicketType.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Date;
+
+@Entity
+@Table(name = "ticket_types")
+public class TicketType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private int maxNumberOfPeople;
+
+    @Column(nullable = false)
+    private int minimumAgeToAttend;
+
+    @Column(nullable = false)
+    private double price;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    public TicketType() {
+    }
+
+    public TicketType(String name, String description, int maxNumberOfPeople, int minimumAgeToAttend, double price, Event event) {
+        this.name = name;
+        this.description = description;
+        this.maxNumberOfPeople = maxNumberOfPeople;
+        this.minimumAgeToAttend = minimumAgeToAttend;
+        this.price = price;
+        this.event = event;
+        this.event.addTicketType(this);
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getMaxNumberOfPeople() {
+        return maxNumberOfPeople;
+    }
+
+    public void setMaxNumberOfPeople(int maxNumberOfPeople) {
+        this.maxNumberOfPeople = maxNumberOfPeople;
+    }
+
+    public int getMinimumAgeToAttend() {
+        return minimumAgeToAttend;
+    }
+
+    public void setMinimumAgeToAttend(int minimumAgeToAttend) {
+        this.minimumAgeToAttend = minimumAgeToAttend;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Ticket Type: %s, Price: %.2f, Min Age: %d", name, price, minimumAgeToAttend);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/CheckingAccountPayment.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "checking_account_payments")
+@AttributeOverrides({
+    @AttributeOverride(name = "id", column = @Column(name = "checking_account_payment_id"))
+})
+public class CheckingAccountPayment extends PaymentMethod {
+    @Column(nullable = false)
+    private String accountNumber;
+
+    @Column(nullable = false)
+    private String routingNumber;
+
+    public CheckingAccountPayment() {
+    }
+
+    public CheckingAccountPayment(String accountNumber, String routingNumber) {
+        this.accountNumber = accountNumber;
+        this.routingNumber = routingNumber;
+    }
+
+    // Getters and Setters
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getRoutingNumber() {
+        return routingNumber;
+    }
+
+    public void setRoutingNumber(String routingNumber) {
+        this.routingNumber = routingNumber;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Checking Account Payment: Account Number: %s, Routing Number: %s", accountNumber, routingNumber);
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/AbstractRecommenderModel.java
+
+package eventmarket.main;
+
+import java.util.List;
+
+public abstract class AbstractRecommenderModel {
+    protected int id;
+    protected User user;
+
+    public abstract List<Event> recommend(int n);
+    public abstract List<Event> recommend();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/FinancialInformation.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "financial_information")
+public class FinancialInformation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_method_id", nullable = true)
+    private PaymentMethod paymentMethod;
+
+    public FinancialInformation() {
+    }
+
+    public FinancialInformation(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/User.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "users")
+public class User {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(name = "receives_emails", nullable = false)
+    private boolean receivesEmails;
+
+    @Column(name = "receives_pushs", nullable = false)
+    private boolean receivesPushs;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TicketRequest> ticketRequests;
+
+    @Temporal(TemporalType.DATE)
+    private Date birthDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FinancialInformation> financialInformation = new ArrayList<>();
+
+    public User() {
+        this.receivesEmails = true;
+        this.receivesPushs = true;
+    }
+
+    public User(String name, String email, String password, Date birthDate) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.birthDate = birthDate;
+        this.tickets = new ArrayList<>();
+        this.ticketRequests = new ArrayList<>();
+        this.financialInformation = new ArrayList<>();
+        this.receivesEmails = true;
+        this.receivesPushs = true;
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean getReceivesEmails() {
+        return receivesEmails;
+    }
+
+    public void setReceivesEmails(boolean receivesEmails) {
+        this.receivesEmails = receivesEmails;
+    }
+
+    public boolean getReceivesPushs() {
+        return receivesPushs;
+    }
+
+    public void setReceivesPushs(boolean receivesPushs) {
+        this.receivesPushs = receivesPushs;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public List<TicketRequest> getTicketRequests() {
+        return ticketRequests;
+    }
+
+    public void setTicketRequests(List<TicketRequest> ticketRequests) {
+        this.ticketRequests = ticketRequests;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public List<FinancialInformation> getFinancialInformation() {
+        return financialInformation;
+    }
+    
+    public void setFinancialInformation(List<FinancialInformation> financialInformation) {
+        this.financialInformation = financialInformation;
+    }
+
+    public void addFinancialInformation(FinancialInformation financialInformation) {
+        this.financialInformation.add(financialInformation);
+        financialInformation.setUser(this);
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("User: %s, Email: %s", name, email);
+    }
+
+    public int getAge() {
+        if (birthDate == null) {
+            return 0;
+        }
+        Calendar now = Calendar.getInstance(); // Get the current date
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(birthDate); // Set the date of birth
+
+        int year1 = now.get(Calendar.YEAR);
+        int year2 = dob.get(Calendar.YEAR);
+        int age = year1 - year2; // Basic year subtraction
+
+        int month1 = now.get(Calendar.MONTH);
+        int month2 = dob.get(Calendar.MONTH);
+        if (month2 > month1) {
+            age--; // If birth month is greater than current month, decrement age
+        } else if (month1 == month2) {
+            int day1 = now.get(Calendar.DAY_OF_MONTH);
+            int day2 = dob.get(Calendar.DAY_OF_MONTH);
+            if (day2 > day1) {
+                age--; // If birth day is greater than current day, decrement age
+            }
+        }
+        return age;
+    }
+
+    public Recipient transformToRecipient() {
+        return new Recipient(this.name, this.email, this.birthDate);
+    }
+
+    public void saveTicketRequest(TicketRequest ticketRequest) {
+        ticketRequests.add(ticketRequest);
+        ticketRequest.setUser(this);
+    }
+
+    public void receiveTicket(Ticket ticket) {
+        tickets.add(ticket);
+
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/PaymentMethod.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "payment_methods")
+public abstract class PaymentMethod {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
+
+    // common fields if any
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/Event.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "events")
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Creator creator;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date startTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date endTime;
+
+    @Column(nullable = false)
+    private int purchaseCount;
+
+    @Column(nullable = false)
+    private int checkedInCount;
+
+    @Column(nullable = false)
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TicketType> ticketTypes;
+
+    @Column(nullable = false)
+    private String publicDescription;
+
+    @Column(nullable = false)
+    private String publicTagline;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @Transient
+    private EntityManager entityManager;
+
+    public Event() {
+    }
+
+    public Event(
+            String name, Location location, Date startTime, Date endTime, 
+            String publicDescription, String publicTagline
+    ) {
+        this.name = name;
+        this.location = location;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.ticketTypes = new ArrayList<>();
+        this.publicDescription = publicDescription;
+        this.publicTagline = publicTagline;
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Creator getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Creator creator) {
+        this.creator = creator;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getCheckedInCount() {
+        return checkedInCount;
+    }
+
+    public void setCheckedInCount(int checkedInCount) {
+        this.checkedInCount = checkedInCount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public List<TicketType> getTicketTypes() {
+        return ticketTypes;
+    }
+
+    public void setTicketTypes(List<TicketType> ticketTypes) {
+        this.ticketTypes = ticketTypes;
+    }
+    
+    public void addTicketType(TicketType ticketType) {
+        ticketTypes.add(ticketType);
+        ticketType.setEvent(this);
+    }
+
+    public void removeTicketType(TicketType ticketType) {
+        ticketTypes.remove(ticketType);
+        ticketType.setEvent(null);
+    }
+
+    public String getPublicDescription() {
+        return publicDescription;
+    }
+
+    public void setPublicDescription(String publicDescription) {
+        this.publicDescription = publicDescription;
+    }
+
+    public String getPublicTagline() {
+        return publicTagline;
+    }
+
+    public void setPublicTagline(String publicTagline) {
+        this.publicTagline = publicTagline;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    // Business methods
+
+    public int getEventDurationInHours() {
+        return (int) ((endTime.getTime() - startTime.getTime()) / 3600000);
+    }
+
+    public String getEventDuration() {
+        int hours = getEventDurationInHours();
+        int minutes = (int) ((endTime.getTime() - startTime.getTime()) / 60000) % 60;
+        return String.format("%02d:%02d", hours, minutes);
+    }
+
+    public String display() {
+        return String.format("Event: %s, Location: %s, Start: %s, End: %s", name, location.display(), startTime, endTime);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+
+    public int getPurchaseCount() {
+        if (entityManager == null) {
+            return 0;
+        }
+        Long count = entityManager.createQuery(
+            "SELECT COUNT(t) FROM Ticket t WHERE t.ticketRequest.ticketType.event = :event", Long.class)
+            .setParameter("event", this)
+            .getSingleResult();
+        return count.intValue();
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/Ticket.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Date;
+
+@Entity
+@Table(name = "tickets")
+public class Ticket {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @OneToOne
+    @JoinColumn(name = "ticket_request_id", nullable = false)
+    private TicketRequest ticketRequest;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(nullable = false)
+    private boolean checkedIn;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    public Ticket() {
+    }
+
+    public Ticket(TicketRequest ticketRequest) {
+        this.ticketRequest = ticketRequest;
+        this.checkedIn = false;
+        this.user = ticketRequest.getUser();
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TicketRequest getTicketRequest() {
+        return ticketRequest;
+    }
+
+    public void setTicketRequest(TicketRequest ticketRequest) {
+        this.ticketRequest = ticketRequest;
+    }
+
+    public boolean isCheckedIn() {
+        return checkedIn;
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        this.checkedIn = checkedIn;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Ticket ID: %d, Checked-In: %s", id, checkedIn ? "Yes" : "No");
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        if (!user.getTickets().contains(this)) {
+            user.getTickets().add(this);
+        }
+        this.ticketRequest.setUser(user);
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/Location.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.util.Date;
+
+@Entity
+@Table(name = "locations")
+public class Location {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String zipcode;
+
+    @Column(nullable = false)
+    private String state;
+
+    @Column(nullable = false)
+    private String country;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    public Location() {
+    }
+
+    public Location(String address, String city, String zipcode, String state, String country) {
+        this.address = address;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.state = state;
+        this.country = country;
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Location: %s, %s, %s, %s, %s", address, city, state, zipcode, country);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/Recipient.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+
+@Entity
+@Table(name = "recipients")
+public class Recipient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Date birthDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    public Recipient() {
+    }
+
+    public Recipient(String name, String email, Date birthDate) {
+        this.name = name;
+        this.email = email;
+        this.birthDate = birthDate;
+    }
+
+    // Constructor that allows creating a Recipient from a User object
+    public Recipient(User user) {
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.birthDate = user.getBirthDate();
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Recipient: %s, Email: %s", name, email);
+    }
+
+    public int getAge() {
+        if (birthDate == null) {
+            return 0;
+        }
+        Calendar now = Calendar.getInstance();
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(birthDate);
+
+        int year1 = now.get(Calendar.YEAR);
+        int year2 = dob.get(Calendar.YEAR);
+        int age = year1 - year2;
+
+        int month1 = now.get(Calendar.MONTH);
+        int month2 = dob.get(Calendar.MONTH);
+        if (month2 > month1) {
+            age--;  // Birthday hasn't occurred this year yet
+        } else if (month1 == month2) {
+            int day1 = now.get(Calendar.DAY_OF_MONTH);
+            int day2 = dob.get(Calendar.DAY_OF_MONTH);
+            if (day2 > day1) {
+                age--;  // Birthday hasn't occurred yet this month
+            }
+        }
+        return age;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/AbstractIterator.java
+
+package eventmarket.main;
+
+
+public abstract class AbstractIterator<T> {
+    public abstract T next();
+    public abstract int getSteps();
+    public abstract void setSteps(int step);
+    public abstract boolean isDone();
+    public abstract T current();
+    public abstract T first();
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/App.java
+
+package eventmarket.main;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args )
+    {
+        System.out.println( "Hello World!" );
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/NlpRecommenderModel.java
+
+package eventmarket.main;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class NlpRecommenderModel extends AbstractRecommenderModel {
+
+    private User user;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public NlpRecommenderModel(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public List<Event> recommend(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Invalid value for n");
+        }
+        return findEventsBasedOnNlpAnalysis(n);
+    }
+
+    @Override public List<Event> recommend() {
+        return findEventsBasedOnNlpAnalysis(3);
+    }
+
+    private List<Event> findEventsBasedOnNlpAnalysis(int n) {
+        List<Event> allEvents = fetchAllEvents();
+        List<Event> userEvents = fetchUserEvents();
+
+        allEvents.removeAll(userEvents);
+        return selectRandomEvents(allEvents, n);
+    }
+
+    private List<Event> fetchAllEvents() {
+        return entityManager.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+    }
+
+    private List<Event> fetchUserEvents() {
+        List<Event> userEvents = new ArrayList<>();
+
+        List<Ticket> userTickets = entityManager.createQuery(
+                "SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class)
+                .setParameter("user", user)
+                .getResultList();
+        for (Ticket ticket : userTickets) {
+            userEvents.add(ticket.getTicketRequest().getTicketType().getEvent());
+        }
+
+        List<TicketRequest> userTicketRequests = entityManager.createQuery(
+                "SELECT tr FROM TicketRequest tr WHERE tr.user = :user", TicketRequest.class)
+                .setParameter("user", user)
+                .getResultList();
+        for (TicketRequest ticketRequest : userTicketRequests) {
+            userEvents.add(ticketRequest.getTicketType().getEvent());
+        }
+
+        return userEvents;
+    }
+
+    private List<Event> selectRandomEvents(List<Event> events, int count) {
+        Random rand = new Random();
+        List<Event> selectedEvents = new ArrayList<>();
+        for (int i = 0; i < count && !events.isEmpty(); i++) {
+            int randomIndex = rand.nextInt(events.size());
+            selectedEvents.add(events.remove(randomIndex));
+        }
+        return selectedEvents;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/EventRecommender.java
+
+package eventmarket.main;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EventRecommender {
+    private int id;
+    private User user;
+    private AbstractRecommenderModel model;
+    private int numberRecommendations;
+    private List<Event> eventRecommendations;
+
+    public EventRecommender(AbstractRecommenderModel model) {
+        this.user = model.getUser();
+        this.model = model;
+        this.numberRecommendations = 3;
+        this.eventRecommendations = new ArrayList<>();
+    }
+
+    public List<Event> sendRecommendation() {
+        return eventRecommendations;
+    }
+
+    public void setNumberRecommendations(int numberRecommendations) {
+        this.numberRecommendations = numberRecommendations;
+    }
+
+    public int getNumberRecommendations() {
+        return numberRecommendations;
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public AbstractRecommenderModel getModel() {
+        return model;
+    }
+
+    public void setModel(AbstractRecommenderModel model) {
+        this.model = model;
+    }
+
+    public void requestRecommendation() {
+        eventRecommendations = model.recommend(numberRecommendations);
+    }
+
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/NotificationEngine.java
+
+package eventmarket.main;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class NotificationEngine {
+    private String message;
+    private String recipient;
+
+    public NotificationEngine() {
+        this.message = "";
+        this.recipient = "";
+    }
+
+    private void setRecipient(User user){
+        this.recipient = user.getEmail();
+    }
+
+    private void setRecipient(Creator creator){
+        this.recipient = creator.getEmail();
+    }
+
+    public void userCreated(User user) {
+        this.message = String.format(
+            "🎉 Welcome to EventMarket, %s! 🎉 We're absolutely thrilled to have you with us. Start exploring the amazing events we have and dive into a world of excitement!",
+            user.getName()
+        );
+        this.setRecipient(user);
+    }
+
+    public void creatorCreated(Creator creator) {
+        this.message = String.format(
+            "👋 Hello %s! Thank you for joining EventMarket as a creator. Start creating events and reach out to a wider audience. Let's make something incredible together!",
+            creator.getName()
+        );
+        this.setRecipient(creator);
+    }
+
+    public void ticketPaymentApproved(User user, TicketRequest ticketRequest) {
+        this.message = String.format(
+            "✅ Hi %s, Your payment for the ticket type '%s' has been approved! Get ready to enjoy '%s'. See you there!",
+            user.getName(), 
+            ticketRequest.getTicketType().getName(), 
+            ticketRequest.getTicketType().getEvent().getName()
+        );
+        this.setRecipient(user);
+    }
+
+    public void ticketPaymentRejected(User user, TicketRequest ticketRequest) {
+        this.message = String.format(
+            "❌ Hi %s, We're sorry to inform you that your payment for the ticket type '%s' for the event '%s' has been rejected. Please try again or contact support.",
+            user.getName(), 
+            ticketRequest.getTicketType().getName(), 
+            ticketRequest.getTicketType().getEvent().getName()
+        );
+        this.setRecipient(user);
+    }
+
+    public void ticketPaymentInProcess(User user, TicketRequest ticketRequest) {
+        this.message = String.format(
+            "⏳ Hi %s, Your payment for the ticket type '%s' for the event '%s' is currently being processed. You will be notified once it's approved. Stay tuned!",
+            user.getName(), 
+            ticketRequest.getTicketType().getName(), 
+            ticketRequest.getTicketType().getEvent().getName()
+        );
+        this.setRecipient(user);
+    }
+
+    public void eventRecommendation(User user, List<Event> events) {
+        String eventList = events.stream()
+            .map(event -> String.format("'%s' on %s", event.getName(), event.getStartTime()))
+            .collect(Collectors.joining(", "));
+
+        this.message = String.format(
+            "🌟 Hi %s, based on your interests, we highly recommend the following events: %s. Don't miss out on these exciting opportunities!",
+            user.getName(), eventList
+        );
+        this.setRecipient(user);
+    }
+
+    public void creatorEventUpdate(Creator creator, Event event) {
+        this.message = String.format(
+            "👏 Hello %s, Your event '%s' has been successfully updated! You've sold %d tickets so far. Keep up the fantastic work!",
+            creator.getName(), event.getName(), event.getPurchaseCount()
+        );
+        this.setRecipient(creator);
+    }
+
+    public void eventCreated(Creator creator, Event event) {
+        this.message = String.format(
+            "🎉 Hi %s, Your event '%s' has been successfully created! Share it with the world and let the magic begin. 🌟",
+            creator.getName(), event.getName()
+        );
+        this.setRecipient(creator);
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+
+    public String getRecipient() {
+        return this.recipient;
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/CreateDate.java
+
+package eventmarket.main;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public class CreateDate {
+    public static Date createDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return calendar.getTime();
+    }
+
+    // create date with time
+    public static Date createDate(int year, int month, int day, int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        return calendar.getTime();
+    }
+}
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/Creator.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "creators")
+public class Creator {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> eventsCreated;
+
+    public Creator() {
+    }
+
+    public Creator(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.eventsCreated = new ArrayList<>();
+    }
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public List<Event> getEventsCreated() {
+        return eventsCreated;
+    }
+
+    public void setEventsCreated(List<Event> eventsCreated) {
+        this.eventsCreated = eventsCreated;
+    }
+
+    public void addEvent(Event event) {
+        eventsCreated.add(event);
+        event.setCreator(this);
+    }
+
+    public void removeEvent(Event event) {
+        eventsCreated.remove(event);
+        event.setCreator(null);
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Creator: %s, Email: %s", name, email);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) { // only set for new entities
+            createdAt = new Date();
+        }
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/CardPayment.java
+
+package eventmarket.main;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "card_payments")
+public class CardPayment extends PaymentMethod {
+    @Column(nullable = false)
+    private String cardNumber;
+
+    @Column(nullable = false)
+    private String cardHolder;
+
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Date expirationDate;
+
+    @Column(nullable = false)
+    private String cvv;
+
+    public CardPayment() {
+    }
+
+    public CardPayment(String cardNumber, String cardHolder, Date expirationDate, String cvv) {
+        this.cardNumber = cardNumber;
+        this.cardHolder = cardHolder;
+        this.expirationDate = expirationDate;
+        this.cvv = cvv;
+    }
+
+    // Getters and Setters
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
+    // Business methods
+
+    public String display() {
+        return String.format("Card Number: %s, Card Holder: %s, Expiry: %s", cardNumber, cardHolder, expirationDate.toString());
+    }
+}
+
+
+================================================================================
+
+FILE NAME: event-market/src/main/java/eventmarket/main/DatabaseInitializer.java
+
+package eventmarket.main;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+public class DatabaseInitializer {
+    public static void main(String[] args) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EventMarketPU");
+        emf.close();
+    }
+}
+
+================================================================================
+

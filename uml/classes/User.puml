@@ -1,0 +1,23 @@
+@startuml User
+class User {
+    - id : int
+    - name : String
+    - email : String
+    - password : String
+    - createdAt : Date
+    - tickets : List<Ticket>
+    - ticketRequests : List<TicketRequest>
+    - birthDate : Date
+    - financialInformation : List<FinancialInformation>
+    - receivesEmails : boolean
+    - receivesPushs : boolean
+    + User()
+    + User(name : String, email : String, password : String, birthDate : Date)
+    + display() : String
+    + getAge() : int
+    + transformToRecipient() : Recipient
+    + saveTicketRequest(ticketRequest : TicketRequest) : void
+    + receiveTicket(ticket : Ticket) : void
+    + addFinancialInformation(financialInformation : FinancialInformation) : void
+}
+@enduml

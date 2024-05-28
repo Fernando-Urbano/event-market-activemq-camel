@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: eventmarket.main.PopularityRecommenderModelTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.657 s - in eventmarket.main.PopularityRecommenderModelTest

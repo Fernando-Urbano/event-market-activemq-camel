@@ -1,0 +1,10 @@
+@startuml CheckingAccountPayment
+!include PaymentMethod.puml
+
+class CheckingAccountPayment extends PaymentMethod {
+    - accountNumber : String
+    - routingNumber : String
+    + CheckingAccountPayment(accountNumber : String, routingNumber : String)
+    + display() : String
+}
+@enduml

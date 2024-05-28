@@ -1,0 +1,382 @@
+Classes of the project:
+
+================================================================================
+
+FILE NAME: uml/classes/AbstractIterator.puml
+
+@startuml AbstractIterator
+class AbstractIterator <T> {
+    + abstract next() : T
+    + abstract getSteps() : int
+    + abstract setSteps(step : int)
+    + abstract isDone() : boolean
+    + abstract current() : T
+    + abstract first() : T
+}
+@enduml
+
+================================================================================
+
+FILE NAME: uml/classes/EventRecommender.puml
+
+@startuml EventRecommender
+class EventRecommender {
+    - id : int
+    - user : User
+    - model : AbstractRecommenderModel
+    - numberRecommendations : int
+    - eventRecommendations : List<Event>
+    + EventRecommender(model : AbstractRecommenderModel)
+    + sendRecommendation() : List<Event>
+    + requestRecommendation() : void
+    + setNumberRecommendations(numberRecommendations : int) : void
+    + getNumberRecommendations() : int
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/NlpRecommenderModel.puml
+
+@startuml NlpRecommenderModel
+!include AbstractRecommenderModel.puml
+class NlpRecommenderModel extends AbstractRecommenderModel {
+    - user : User
+    - entityManager : EntityManager
+    + recommend(n : int) : List<Event>
+    + recommend() : List<Event>
+    + NlpRecommenderModel(user : User)
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/Creator.puml
+
+@startuml Creator
+class Creator {
+    - id : int
+    - name : String
+    - email : String
+    - password : String
+    - createdAt : Date
+    - eventsCreated : List<Event>
+    + Creator(name : String, email : String, password : String)
+    + display() : String
+    + addEvent(event : Event) : void
+    + removeEvent(event : Event) : void
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/CardPayment.puml
+
+@startuml CardPayment
+!include uml/classes/PaymentMethod.puml
+
+class CardPayment extends PaymentMethod {
+    - cardNumber : String
+    - cardHolder : String
+    - expirationDate : Date
+    - cvv : String
+    + CardPayment(cardNumber : String, cardHolder : String, expirationDate : Date, cvv : String)
+    + display() : String
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/EventAnalyser.puml
+
+@startuml EventAnalyser
+class EventAnalyser {
+    - event : Event
+    + EventAnalyser(event : Event)
+    + calcPurchaseOverTime(period : String, startDate : Date, endDate : Date) : Hash<Date, int>
+    + calcAgeDistribution() : Hash<String, int>
+    + calcAvgAge() : double
+    + calcGenderDistribution() : Hash<String, int>
+    + calcAvgPrice() : double
+    + calcAvgPurchasePerUser() : double
+    + calcSellPriceDistribution() : Hash<double, int>
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/Event.puml
+
+@startuml Event
+class Event {
+    - id : int
+    - creator : Creator
+    - startTime : Date
+    - endTime : Date
+    - purchaseCount : int
+    - checkedInCount : int
+    - name : String
+    - location : Location
+    - ticketTypes : List<TicketType>
+    - publicDescription : String
+    - publicTagline : String
+    - createdAt : Date
+    - entityManager : EntityManager
+    + Event(name : String, location : Location, startTime : Date, endTime : Date, publicDescription : String, publicTagline : String)
+    + display() : String
+    + getEventDurationInHours() : int
+    + getEventDuration() : String
+    + addTicketType(ticketType : TicketType) : void
+    + removeTicketType(ticketType : TicketType) : void
+    + getPurchaseCount() : int
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/Recipient.puml
+
+@startuml Recipient
+class Recipient {
+    - id : int
+    - name : String
+    - email : String
+    - createdAt : Date
+    - birthDate : Date
+    + Recipient(name : String, email : String, birthDate : Date)
+    + Recipient(user : User)
+    + display() : String
+    + getAge() : int
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/Location.puml
+
+@startuml Location
+class Location {
+    - id : int
+    - address : String
+    - city : String
+    - zipcode : String
+    - state : String
+    - country : String
+    - createdAt : Date
+    + Location(address : String, city : String, zipcode : String, state : String, country : String)
+    + display() : String
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/Ticket.puml
+
+@startuml Ticket
+class Ticket {
+    - id : int
+    - ticketRequest : TicketRequest
+    - user : User
+    - checkedIn : boolean
+    - createdAt : Date
+    + Ticket(ticketRequest : TicketRequest)
+    + display() : String
+    + setUser(user : User) : void
+    + getUser() : User
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/TicketType.puml
+
+@startuml TicketType
+class TicketType {
+    - id : int
+    - name : String
+    - description : String
+    - maxNumberOfPeople : int
+    - minimumAgeToAttend : int
+    - price : double
+    - event : Event
+    - createdAt : Date
+    + TicketType(name : String, description : String, maxNumberOfPeople : int, minimumAgeToAttend : int, price : double, event : Event)
+    + display() : String
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/CheckingAccountPayment.puml
+
+@startuml CheckingAccountPayment
+!include classes/PaymentMethod.puml
+
+class CheckingAccountPayment extends PaymentMethod {
+    - accountNumber : String
+    - routingNumber : String
+    + CheckingAccountPayment(accountNumber : String, routingNumber : String)
+    + display() : String
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/PopularityRecommenderModel.puml
+
+@startuml PopularityRecommenderModel
+!include AbstractRecommenderModel.puml
+class PopularityRecommenderModel extends AbstractRecommenderModel {
+    - user : User
+    - entityManager : EntityManager
+    + recommend(n : int) : List<Event>
+    + recommend() : List<Event>
+    + PopularityRecommenderModel(user : User)
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/AbstractRecommenderModel.puml
+
+@startuml AbstractRecommenderModel
+abstract class AbstractRecommenderModel {
+    - id : int
+    - user : User
+    + {abstract} recommend(n : int) : List<Event>
+    + {abstract} recommend() : List<Event>
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/User.puml
+
+@startuml User
+class User {
+    - id : int
+    - name : String
+    - email : String
+    - password : String
+    - createdAt : Date
+    - tickets : List<Ticket>
+    - ticketRequests : List<TicketRequest>
+    - birthDate : Date
+    - financialInformation : List<FinancialInformation>
+    - receivesEmails : boolean
+    - receivesPushs : boolean
+    + User()
+    + User(name : String, email : String, password : String, birthDate : Date)
+    + display() : String
+    + getAge() : int
+    + transformToRecipient() : Recipient
+    + saveTicketRequest(ticketRequest : TicketRequest) : void
+    + receiveTicket(ticket : Ticket) : void
+    + addFinancialInformation(financialInformation : FinancialInformation) : void
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/FinancialInformation.puml
+
+@startuml FinancialInformation
+class FinancialInformation {
+    - id : int
+    - user : User
+    - paymentMethod : PaymentMethod
+    + FinancialInformation()
+    + FinancialInformation(paymentMethod : PaymentMethod)
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/PaymentMethod.puml
+
+@startuml PaymentMethod
+abstract class PaymentMethod {
+    # id : int
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/TicketRequest.puml
+
+@startuml TicketRequest
+class TicketRequest {
+    - id : int
+    - ticketType : TicketType
+    - user : User
+    - recipient : Recipient
+    - financialInformation : FinancialInformation
+    - approved : boolean
+    - createdAt : Date
+    + TicketRequest()
+    + TicketRequest(recipient : Recipient, financialInformation : FinancialInformation, ticketType : TicketType)
+    + display() : String
+    + transformToTicket() : Ticket
+    + approveRequest() : void
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/TicketTypeIterator.puml
+
+@startuml TicketTypeIterator
+!include uml/classes/AbstractIterator.puml
+class TicketTypeIterator extends AbstractIterator {
+    - event : Event
+    - currentIndex : int
+    - ticketTypes : List<TicketType>
+    + TicketTypeIterator(event : Event)
+    + next() : TicketType
+    + getSteps() : int
+    + setSteps(step : int) : void
+    + isDone() : boolean
+    + current() : TicketType
+    + first() : TicketType
+}
+@enduml
+
+
+================================================================================
+
+FILE NAME: uml/classes/FinancialValidator.puml
+
+@startuml FinancialValidator
+class FinancialValidator {
+    - instance : FinancialValidator
+    - recentlyCheckedRequestIds : List<int>
+    - FinancialValidator()
+    + getInstance() : FinancialValidator
+    + requestValidation(ticketRequest : TicketRequest) : boolean
+    + addRecentlyCheckedRequestId(ticketRequestId : int) : void
+    + isRecentlyChecked(ticketRequestId : int) : boolean
+}
+
+FinancialValidator <<singleton>>
+@enduml
+
+
+================================================================================
+

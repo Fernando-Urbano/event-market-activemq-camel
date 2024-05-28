@@ -1,0 +1,16 @@
+eventmarket/main/FinancialInformationTest.class
+eventmarket/main/CreatorTest.class
+eventmarket/main/AppTest.class
+eventmarket/main/RecipientTest.class
+eventmarket/main/UserTest.class
+eventmarket/main/PaymentMethodTest.class
+eventmarket/main/EventTest.class
+eventmarket/main/LocationTest.class
+eventmarket/main/TicketTypeTest.class
+eventmarket/main/TicketRequestTest.class
+eventmarket/main/EventRecommenderTest.class
+eventmarket/main/TicketTest.class
+eventmarket/main/TicketTypeIteratorTest.class
+eventmarket/main/PopularityRecommenderModelTest.class
+eventmarket/main/NotificationEngineTest.class
+eventmarket/main/NlpRecommenderModelTest.class

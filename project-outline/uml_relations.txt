@@ -1,0 +1,147 @@
+Interaction between classes:
+
+================================================================================
+
+FILE NAME: uml/TicketValidation.puml
+
+@startuml TicketValidation
+title Ticket Validation
+!include uml/classes/TicketRequest.puml
+!include uml/classes/Ticket.puml
+!include uml/classes/User.puml
+
+' Association from Ticket to TicketRequest indicating that each Ticket contains a TicketRequest
+Ticket -> TicketRequest : contains
+
+' Aggregation from User to Ticket indicating that User has a collection of Tickets
+User "1" *-- "many" Ticket : has
+
+@enduml
+
+================================================================================
+
+FILE NAME: uml/FinancialValidation.puml
+
+@startuml FinancialValidation
+title Financial Validation
+!include uml/classes/FinancialInformation.puml
+!include uml/classes/FinancialValidator.puml
+!include uml/classes/PaymentMethod.puml
+!include uml/classes/CardPayment.puml
+!include uml/classes/CheckingAccountPayment.puml
+!include uml/classes/TicketRequest.puml
+
+' Dependency from FinancialValidator to TicketRequest
+FinancialValidator ..> TicketRequest : uses
+
+' Composition from TicketRequest to FinancialInformation
+TicketRequest *-- "1" FinancialInformation
+
+' Dependency from FinancialValidator to PaymentMethod (handles payment processing)
+FinancialValidator ..> PaymentMethod : handles payment
+@enduml
+
+================================================================================
+
+FILE NAME: uml/EventAnalyticsPlatform.puml
+
+@startuml EventAnalyticsPlatform
+title Event Analytics Platform
+!include uml/classes/EventAnalyser.puml
+!include uml/classes/Event.puml
+
+' Dependency from EventAnalyser to Event (EventAnalyser uses Event for generating statistics)
+EventAnalyser ..> Event : analyzes
+
+@enduml
+
+================================================================================
+
+FILE NAME: uml/EventRecommenderEngine.puml
+
+@startuml EventRecommenderEngine
+title Event Recommender Engine
+!include uml/classes/User.puml
+!include uml/classes/EventRecommender.puml
+!include uml/classes/AbstractRecommenderModel.puml
+!include uml/classes/NlpRecommenderModel.puml
+!include uml/classes/PopularityRecommenderModel.puml
+
+User ..> EventRecommender : uses
+
+' EventRecommender acts as a Facade, simplifying the recommendation process
+note right of EventRecommender
+  Facade pattern: simplifies complex
+  recommendation processes
+end note
+EventRecommender *-- AbstractRecommenderModel : uses models
+
+@enduml
+
+================================================================================
+
+FILE NAME: uml/EventCreation.puml
+
+@startuml EventCreation
+title Event Creation
+!include uml/classes/Creator.puml
+!include uml/classes/Event.puml
+!include uml/classes/TicketType.puml
+!include uml/classes/Location.puml
+
+' Aggregation between Creator and Event
+Creator o-- "0..*" Event : creates
+
+' Composition between Event and TicketType
+Event "1" *-- "1..*" TicketType : contains
+
+' Composition between Event and Location
+Event *-- "1" Location : contains
+
+@enduml
+
+================================================================================
+
+FILE NAME: uml/TicketPurchase.puml
+
+@startuml TicketPurchase
+title Ticket Purchase
+!include uml/classes/Event.puml
+!include uml/classes/User.puml
+!include uml/classes/Recipient.puml
+!include uml/classes/TicketRequest.puml
+!include uml/classes/TicketType.puml
+!include uml/classes/FinancialInformation.puml
+!include uml/classes/PaymentMethod.puml
+!include uml/classes/CardPayment.puml
+!include uml/classes/CheckingAccountPayment.puml
+!include uml/classes/TicketTypeIterator.puml
+
+' Event and TicketType - Composition if each Event strictly owns its TicketTypes
+Event "1" *-- "1..*" TicketType
+
+' TicketRequest and TicketType - Composition
+TicketRequest *-- "1" TicketType
+
+' TicketRequest and FinancialInformation - Composition
+TicketRequest *-- "0..1" FinancialInformation
+
+' FinancialInformation and PaymentMethod - Composition
+FinancialInformation *-- "1" PaymentMethod : contains
+
+' Association between User and TicketRequest
+User -- TicketRequest : purchaser
+
+' FinancialInformation and PaymentMethod - Composition
+TicketTypeIterator *-- Event
+
+' Association between Recipient and TicketRequest
+Recipient -- TicketRequest : recipient
+
+' note "A User can be transformed into a Recipient during the ticket purchase process." as N1
+' N1 .. TicketRequest
+
+@enduml
+
+================================================================================
+

@@ -1,0 +1,9 @@
+@startuml EventAnalyticsPlatform
+title Event Analytics Platform
+!include classes/EventAnalyser.puml
+!include classes/Event.puml
+
+' Dependency from EventAnalyser to Event (EventAnalyser uses Event for generating statistics)
+EventAnalyser ..> Event : analyzes
+
+@enduml

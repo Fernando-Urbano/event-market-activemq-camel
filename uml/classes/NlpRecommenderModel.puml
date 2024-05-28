@@ -1,0 +1,10 @@
+@startuml NlpRecommenderModel
+!include AbstractRecommenderModel.puml
+class NlpRecommenderModel extends AbstractRecommenderModel {
+    - user : User
+    - entityManager : EntityManager
+    + recommend(n : int) : List<Event>
+    + recommend() : List<Event>
+    + NlpRecommenderModel(user : User)
+}
+@enduml

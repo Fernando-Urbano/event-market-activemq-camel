@@ -1,0 +1,10 @@
+@startuml PopularityRecommenderModel
+!include AbstractRecommenderModel.puml
+class PopularityRecommenderModel extends AbstractRecommenderModel {
+    - user : User
+    - entityManager : EntityManager
+    + recommend(n : int) : List<Event>
+    + recommend() : List<Event>
+    + PopularityRecommenderModel(user : User)
+}
+@enduml
